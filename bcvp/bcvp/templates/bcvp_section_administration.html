@@ -1,0 +1,58 @@
+{% extends "section_administration.html"%}
+{% load admin_urls %}
+{% load url from future %}
+
+{% block admin_sections %}
+    <H5>Appointments</H5>
+    <ul>
+    <li><A href="{% url 'admin:edc_appointment_appointment_changelist' %}?registered_subject__subject_type=subject">Subject Appointments</A>
+    &nbsp(<A href="{% url 'admin:edc_appointment_appointment_changelist' %}?appt_status__exact=new&registered_subject__subject_type=subject">New</A>,&nbsp
+    <A href="{% url 'admin:edc_appointment_appointment_changelist' %}?appt_status__exact=in_progress&registered_subject__subject_type=subject">In Progress</A>,&nbsp
+    <A href="{% url 'admin:edc_appointment_appointment_changelist' %}?appt_status__exact=incomplete&registered_subject__subject_type=subject">Incomplete</A>,&nbsp
+    <A href="{% url 'admin:edc_appointment_appointment_changelist' %}?appt_status__exact=done&registered_subject__subject_type=subject">Done</A>)
+    <li><A href="{% url 'admin:edc_appointment_appointment_changelist' %}?registered_subject__subject_type=infant">Infant Appointments</A>
+    &nbsp(<A href="{% url 'admin:edc_appointment_appointment_changelist' %}?appt_status__exact=new&registered_subject__subject_type=infant">New</A>,&nbsp
+    <A href="{% url 'admin:edc_appointment_appointment_changelist' %}?appt_status__exact=in_progress&registered_subject__subject_type=infant">In Progress</A>,&nbsp
+    <A href="{% url 'admin:edc_appointment_appointment_changelist' %}?appt_status__exact=incomplete&registered_subject__subject_type=infant">Incomplete</A>,&nbsp
+    <A href="{% url 'admin:edc_appointment_appointment_changelist' %}?appt_status__exact=done&registered_subject__subject_type=infant">Done</A>)
+    </ul>
+
+    <H5>Registered Subjects</H5>
+    <ul>
+    <li><A href="{% url 'admin:edc_registration_registeredsubject_changelist' %}?subject_type=subject">Subject Registered Subjects</A>
+	</ul>
+
+    <H5>Labs</H5>
+    <ul>
+    <li><A href="{% url 'admin:bcvp_lab_subjectrequisition_changelist' %}">Subject Requisition</A>
+    <li><A href="{% url 'admin:bcvp_lab_packinglist_changelist' %}">Packing Lists</A>
+    <li><A href="{% url 'admin:bcvp_lab_aliquot_changelist' %}">Aliquot</A>
+	</ul>
+
+    <H5>Call Manager</H5>
+    <ul>
+    <li><A href="{% url 'admin:edc_call_manager_call_changelist' %}">Call Manager</A>
+    </ul>
+	
+    <H5>Subject</H5>
+    <ul>
+    Go to <A href="{% url 'admin:app_list' app_label='bcvp_subject' %}">All Subject Forms</A> or select one:
+    <ul>
+    <li><A href="{% url 'admin:bcvp_subject_subjectconsent_changelist' %}">Subject Consents</A>
+    <li><A href="{% url 'admin:bcvp_subject_subjectoffstudy_changelist' %}">Subject Off Study</A>
+    <li><A href="{% url 'admin:bcvp_subject_subjectdeathreport_changelist' %}">Subject Death Report</A>
+    </ul>
+    </ul>
+
+{% endblock admin_sections %}
+{% block device_sync %}
+  {% comment %}if you don't want to see this section, override it in the child template {% endcomment %}
+   {% comment %}<H5>Device Synchronization</H5>
+  <ul>
+  <li><A href="{% url 'sync_index_url' %}">Synchronize devices with Community Server (Return)</A></li>
+  {% block device_sync_export %}
+      <li><A href="{% url 'sync_export_outgoing_url' %}">Export outgoing transactions to file</A></li>
+  {% endblock device_sync_export %}
+  {% block device_inspector %}{% endblock device_inspector %}
+  </ul> {% endcomment %}
+{% endblock device_sync %}

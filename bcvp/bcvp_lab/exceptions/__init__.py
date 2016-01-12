@@ -1,0 +1,4 @@
+
+
+class AlreadyRegistered(Exception):
+    pass
