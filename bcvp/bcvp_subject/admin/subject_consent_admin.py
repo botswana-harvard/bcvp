@@ -25,6 +25,7 @@ class SubjectConsentAdmin(BaseModelAdmin):
               'consent_datetime',
               'dob',
               'is_dob_estimated',
+              'gender',
               'citizen',
               'identity',
               'identity_type',
@@ -40,6 +41,7 @@ class SubjectConsentAdmin(BaseModelAdmin):
     radio_fields = {
         'assessment_score': admin.VERTICAL,
         'citizen': admin.VERTICAL,
+        'gender': admin.VERTICAL,
         'consent_copy': admin.VERTICAL,
         'consent_reviewed': admin.VERTICAL,
         'consent_signature': admin.VERTICAL,
