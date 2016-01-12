@@ -9,9 +9,9 @@ from lis.labeling.classes import LabelPrinterTuple, ZplTemplateTuple, ClientTupl
 from lis.specimen.lab_aliquot_list.classes import AliquotTypeTuple
 from lis.specimen.lab_panel.classes import PanelTuple
 
-from bcvp.bcvp.constants import MIN_AGE_OF_CONSENT
+from .constants import MIN_AGE_OF_CONSENT
 
-from bcvp.bcvp.aliquot_label import aliquot_label
+from .aliquot_label import aliquot_label
 
 study_start_datetime = datetime(2015, 12, 1, 0, 0, 0)
 study_end_datetime = datetime(2016, 12, 1, 0, 0, 0)
