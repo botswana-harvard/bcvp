@@ -11,8 +11,6 @@ from lis.specimen.lab_panel.classes import PanelTuple
 
 from .constants import MIN_AGE_OF_CONSENT
 
-from .aliquot_label import aliquot_label
-
 study_start_datetime = datetime(2015, 12, 1, 0, 0, 0)
 study_end_datetime = datetime(2016, 12, 1, 0, 0, 0)
 
@@ -107,18 +105,20 @@ class AppConfiguration(BaseAppConfiguration):
                 ip=None,
                 aliases=None)],
         'zpl_template': [
-            aliquot_label or ZplTemplateTuple(
+            ZplTemplateTuple(
                 'aliquot_label', (
-                    ('^XA\n' +
-                     ('^FO300,15^A0N,20,20^FD${protocol} Site ${site} ${clinician_initials}   '
-                      '${aliquot_type} ${aliquot_count}${primary}^FS\n') +
-                     '^FO300,34^BY1,3.0^BCN,50,N,N,N\n'
+                    ('^XA\n'
+                     '~SD22'
+                     '^FO310,15^A0N,20,20^FD${protocol} Site ${site} ${clinician_initials}   '
+                     '${aliquot_type} ${aliquot_count}${primary}^FS\n'
+                     '^FO310,34^BY1,3.0^BCN,50,N,N,N\n'
                      '^BY^FD${aliquot_identifier}^FS\n'
-                     '^FO300,92^A0N,20,20^FD${aliquot_identifier}^FS\n'
-                     '^FO300,112^A0N,20,20^FD${subject_identifier} (${initials})^FS\n'
-                     '^FO300,132^A0N,20,20^FDDOB: ${dob} ${gender}^FS\n'
-                     '^FO300,152^A0N,25,20^FD${drawn_datetime}^FS\n'
-                     '^XZ')), False),
+                     '^FO310,92^A0N,20,20^FD${aliquot_identifier}^FS\n'
+                     '^FO310,112^A0N,20,20^FD${subject_identifier} (${initials})^FS\n'
+                     '^FO310,132^A0N,20,20^FDDOB: ${dob} ${gender}^FS\n'
+                     '^FO310,152^A0N,25,20^FD${drawn_datetime}^FS\n'
+                     '^XZ')
+                ), True),
             ZplTemplateTuple(
                 'requisition_label', (
                     ('^XA\n' +
