@@ -10,125 +10,233 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import socket
+import sys
+
 from unipath import Path
 
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from django.utils import timezone
+from django.core.exceptions import ImproperlyConfigured
+
+from .databases import (
+    PRODUCTION_MYSQL, TEST_HOSTS_MYSQL, TRAVIS_MYSQL, PRODUCTION_SECRET_KEY)
+
+# these help select the KEY_PATH and full project title
+LIVE_SERVER = 'bcvp.bhp.org.bw'
+
+TEST_HOSTS = ['edc4.bhp.org.bw']
+DEVELOPER_HOSTS = [
+    'mac2-2.local', 'ckgathi', 'one-2.local', 'One-2.local', 'silverapple', 'tsetsiba', 'fchilisa', 'leslie']
+
+APP_NAME = 'bcvp'
+PROJECT_TITLE = 'Botswana Canadian Vaccine Project'
+INSTITUTION = 'Botswana-Harvard AIDS Institute'
+PROTOCOL_REVISION = 'v1.0'
+PROTOCOL_NUMBER = '078'
+
+SOURCE_ROOT = Path(os.path.dirname(os.path.realpath(__file__))).ancestor(1)
 BASE_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+MEDIA_ROOT = BASE_DIR.child('media')
+PROJECT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+PROJECT_ROOT = Path(os.path.dirname(os.path.realpath(__file__))).ancestor(1)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+if socket.gethostname() == LIVE_SERVER:
+    KEY_PATH = '/home/django/source/bcvp/keys'
+elif socket.gethostname() in TEST_HOSTS + DEVELOPER_HOSTS:
+    KEY_PATH = os.path.join(SOURCE_ROOT, 'crypto_fields/test_keys')
+elif 'test' in sys.argv:
+    KEY_PATH = os.path.join(SOURCE_ROOT, 'crypto_fields/test_keys')
+else:
+    raise TypeError(
+        'Warning! Unknown hostname for KEY_PATH. \n'
+        'Getting this wrong on a LIVE SERVER will corrupt your encrypted data!!! \n'
+        'Expected hostname to appear in one of '
+        'settings.LIVE_SERVER, settings.TEST_HOSTS or settings.DEVELOPER_HOSTS. '
+        'Got hostname=\'{}\'\n'.format(socket.gethostname()))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'w^k+nty=&d-)qvc^mn_eo&c7-*^v7-e)f_kk&gbrpiv-d)6x(4'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
-INSTALLED_APPS = (
+INSTALLED_APPS = [
+    'edc_templates',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tastypie',
-    'edc_appointment',
+    'django_revision',
+    'south',
     'edc_appointment',
     'edc_base',
+    'edc_call_manager',
+    'edc_code_lists',
     'edc_configuration',
     'edc_consent',
+    'edc_constants',
     'edc_content_type_map',
     'edc_crypto_fields',
+    'edc_dashboard',
+    'edc_data_dictionary',
+    'edc_data_manager',
+    'edc_death_report',
+    'edc_device',
     'edc_export',
+    'edc_identifier',
     'edc_lab.lab_clinic_api',
+    'edc_lab.lab_clinic_reference',
+    'edc_lab.lab_packing',
+    'edc_lab.lab_profile',
+    'edc_lab.lab_requisition',
+    'edc_locator',
     'edc_meta_data',
-    'edc_quota',
+    'edc_notification',
+    'edc_offstudy',
     'edc_registration',
+    'edc_rule_groups',
     'edc_sync',
-    'edc_testing',
     'edc_visit_schedule',
     'edc_visit_tracking',
-)
+    'lis.labeling',
+    'bcvp.bcvp',
+    'bcvp.bcvp_dashboard',
+    'bcvp.bcvp_subject',
+    'bcvp.bcvp_lab',
+    'bcvp.bcvp_list',
+]
+
+if 'test' in sys.argv:
+    INSTALLED_APPS.append('edc_testing')
+
+if socket.gethostname() in DEVELOPER_HOSTS + TEST_HOSTS or 'test' in sys.argv:
+    INSTALLED_APPS.pop(INSTALLED_APPS.index('south'))
+INSTALLED_APPS = tuple(INSTALLED_APPS)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'django.middleware.security.SecurityMiddleware',
-)
+    'django.middleware.clickjacking.XFrameOptionsMiddleware')
 
-ROOT_URLCONF = 'edc_appointment.urls'
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages")
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+ROOT_URLCONF = 'bcvp.urls'
 
-WSGI_APPLICATION = 'edc_appointment.wsgi.application'
+TEMPLATE_DIRS = ()
 
+TEMPLATE_LOADERS = (
+    # ( 'django.template.loaders.cached.Loader', (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.eggs.Loader')
 
+WSGI_APPLICATION = 'bcvp.wsgi.application'
+
+SECRET_KEY = 'sdfsd32fs#*@(@dfsdf'
 # Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if socket.gethostname() in DEVELOPER_HOSTS:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+elif socket.gethostname() == LIVE_SERVER:
+    SECRET_KEY = PRODUCTION_SECRET_KEY
+    DATABASES = PRODUCTION_MYSQL
+elif socket.gethostname() in TEST_HOSTS:
+    DATABASES = TEST_HOSTS_MYSQL
+elif 'test' in sys.argv:
+    DATABASES = TRAVIS_MYSQL
 
+PROJECT_NUMBER = 'BHP078'
+PROJECT_IDENTIFIER_PREFIX = '078'
+PROJECT_IDENTIFIER_MODULUS = 7
+IS_SECURE_DEVICE = True
+FIELD_MAX_LENGTH = 'default'
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+LANGUAGES = (
+    ('tn', 'Setswana'),
+    ('en', 'English'))
+
+TIME_ZONE = 'Africa/Gaborone'
 
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = False
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR.child('static')
+
+# admin
+LOGIN_URL = '/{app_name}/login/'.format(app_name=APP_NAME)
+LOGIN_REDIRECT_URL = '/{app_name}/'.format(app_name=APP_NAME)
+LOGOUT_URL = '/{app_name}/logout/'.format(app_name=APP_NAME)
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+# edc.crytpo_fields encryption keys
+# developers should set by catching their hostname instead of setting explicitly
 
 GIT_DIR = BASE_DIR.ancestor(1)
 
-SITE_CODE = '10'
-DEVICE_ID = '10'
-SERVER_DEVICE_ID_LIST = [99]
-MIDDLEMAN_DEVICE_ID_LIST = []
-PROJECT_ROOT = BASE_DIR.ancestor(1)
-FIELD_MAX_LENGTH = 'default'
-IS_SECURE_DEVICE = True
-KEY_PATH = os.path.join(BASE_DIR.ancestor(1), 'crypto_fields')
-KEY_PREFIX = 'user'
-ALLOW_MODEL_SERIALIZATION = False
+STUDY_OPEN_DATETIME = timezone.datetime(2015, 10, 18, 0, 0, 0)
+
+SUBJECT_APP_LIST = ['subject']
+SUBJECT_TYPES = ['subject']
+MAX_SUBJECTS = {'subject': 3000}
+MINIMUM_AGE_OF_CONSENT = 18
+MAXIMUM_AGE_OF_CONSENT = 64
+AGE_IS_ADULT = 18
+GENDER_OF_CONSENT = ['M', 'F']
 DISPATCH_APP_LABELS = []
+
+if socket.gethostname() == LIVE_SERVER:
+    DEVICE_ID = 99
+    PROJECT_TITLE = '{} Live Server'.format(PROJECT_TITLE)
+elif socket.gethostname() in TEST_HOSTS:
+    DEVICE_ID = 99
+    PROJECT_TITLE = 'TEST (mysql): {}'.format(PROJECT_TITLE)
+elif socket.gethostname() in DEVELOPER_HOSTS:
+    DEVICE_ID = 99
+    PROJECT_TITLE = 'TEST (sqlite3): {}'.format(PROJECT_TITLE)
+elif 'test' in sys.argv:
+    DEVICE_ID = 99
+    PROJECT_TITLE = 'TEST (sqlite3): {}'.format(PROJECT_TITLE)
+else:
+    raise ImproperlyConfigured(
+        'Unknown hostname for full PROJECT_TITLE. Expected hostname to appear in one of '
+        'settings.LIVE_SERVER, settings.TEST_HOSTS or settings.DEVELOPER_HOSTS. '
+        'Got hostname=\'{}\''.format(socket.gethostname()))
+
+SITE_CODE = '10'
+SERVER_DEVICE_ID_LIST = [91, 92, 93, 94, 95, 96, 97, 99]
+MIDDLEMAN_DEVICE_ID_LIST = [98]
+if str(DEVICE_ID) == '98':
+    PROJECT_TITLE = 'RESERVED FOR MIDDLE MAN'
+
+CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$'
+TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'
+DEFAULT_STUDY_SITE = '10'
+ALLOW_MODEL_SERIALIZATION = True
