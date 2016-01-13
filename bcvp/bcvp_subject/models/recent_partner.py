@@ -10,7 +10,7 @@ from bcvp.bcvp.choices import RELATIONSHIP_TYPE, MAIN_PARTNER_RESIDENCY, SEX_REG
 from .subject_crf_model import SubjectCrfModel
 
 
-class RecentPartner (SubjectCrfModel):
+class RecentPartner(SubjectCrfModel):
 
     rel_type = models.CharField(
         verbose_name="What type of relationship do you have with this person?",
