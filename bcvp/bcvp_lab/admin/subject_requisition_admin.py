@@ -3,7 +3,7 @@ from copy import copy
 from django.contrib import admin
 
 from edc_base.modeladmin.admin import BaseModelAdmin
-from edc_lab.lab_requisition.admin import RequisitionAdminMixin
+from lab_requisition.admin import RequisitionAdminMixin
 
 from bcvp.bcvp_subject.models import SubjectVisit
 

@@ -70,6 +70,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_revision',
     'south',
+    'bcvp.bcvp',
+    'bcvp.bcvp_dashboard',
+    'bcvp.bcvp_lab',
+    'bcvp.bcvp_list',
+    'bcvp.bcvp_subject',
     'edc_appointment',
     'edc_base',
     'edc_call_manager',
@@ -90,7 +95,6 @@ INSTALLED_APPS = [
     'edc_lab.lab_clinic_reference',
     'edc_lab.lab_packing',
     'edc_lab.lab_profile',
-    'edc_lab.lab_requisition',
     'edc_locator',
     'edc_meta_data',
     'edc_notification',
@@ -101,11 +105,6 @@ INSTALLED_APPS = [
     'edc_visit_schedule',
     'edc_visit_tracking',
     'lis.labeling',
-    'bcvp.bcvp',
-    'bcvp.bcvp_dashboard',
-    'bcvp.bcvp_subject',
-    'bcvp.bcvp_lab',
-    'bcvp.bcvp_list',
 ]
 
 if 'test' in sys.argv:
