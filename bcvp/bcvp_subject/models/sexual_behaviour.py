@@ -9,7 +9,7 @@ from bcvp.bcvp.choices import ALCOHOL_SEX
 from .subject_crf_model import SubjectCrfModel
 
 
-class SexualBehaviour (SubjectCrfModel):
+class SexualBehaviour(SubjectCrfModel):
 
     """A model completed by the user on the participant's sexual behaviour."""
 

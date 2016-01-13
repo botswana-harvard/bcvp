@@ -9,7 +9,7 @@ from bcvp.bcvp.choices import LENGTHRESIDENCE_CHOICE, NIGHTSAWAY_CHOICE, CATTLEP
 from .subject_crf_model import SubjectCrfModel
 
 
-class ResidencyMobility (SubjectCrfModel):
+class ResidencyMobility(SubjectCrfModel):
 
     """A model completed by the user on the residency status of the participant."""
 

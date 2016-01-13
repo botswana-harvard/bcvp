@@ -11,7 +11,7 @@ from bcvp.bcvp.choices import (
 from .subject_crf_model import SubjectCrfModel
 
 
-class HivCareAdherence (SubjectCrfModel):
+class HivCareAdherence(SubjectCrfModel):
     """A model completed by the user on the participant's access to and adherence to HIV care."""
 
     first_positive = models.DateField(
