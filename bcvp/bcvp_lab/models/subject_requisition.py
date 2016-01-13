@@ -2,7 +2,7 @@ from django.db import models
 
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models.base_uuid_model import BaseUuidModel
-from edc_lab.lab_requisition.models import RequisitionModelMixin
+from lab_requisition.models import RequisitionModelMixin
 from edc_meta_data.managers import RequisitionMetaDataManager
 from edc_sync.models import SyncModelMixin
 from edc_visit_tracking.models.crf_model_mixin import CrfModelMixin, CrfModelManager
