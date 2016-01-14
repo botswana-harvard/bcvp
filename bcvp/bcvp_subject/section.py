@@ -1,7 +1,7 @@
 from edc_dashboard.section import BaseSectionView, site_sections
 
-from .models import SubjectEligibility
 from .search import SubjectSearchByWord
+from .models import SubjectEligibility
 
 
 class SectionSubjectView(BaseSectionView):
