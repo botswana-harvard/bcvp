@@ -1,0 +1,2 @@
+class NoMatchingRecentInfectionException(Exception):
+    pass
