@@ -41,4 +41,3 @@ class TestEligibility(BaseTestCase):
         registered_subject = RegisteredSubject.objects.get(screening_identifier=subject_eligibility.eligibility_id)
         self.assertEquals(registered_subject.screening_age_in_years, 27)
         self.assertEquals(registered_subject.registration_status, SCREENED)
-        
