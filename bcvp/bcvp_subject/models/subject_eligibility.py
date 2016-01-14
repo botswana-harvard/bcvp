@@ -6,7 +6,7 @@ from django.db.models import get_model
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
 from edc_base.model.validators import datetime_not_before_study_start, datetime_not_future
-from edc_constants.choices import YES_NO
+from edc_constants.choices import YES_NO, ALIVE_DEAD
 from edc_constants.constants import NO
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
@@ -42,6 +42,16 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
             datetime_not_before_study_start,
             datetime_not_future],
         help_text='Date and time of assessing eligibility')
+
+    survival_status = models.CharField(
+        verbose_name="what is the survival status of the participant",
+        max_length=5,
+        choices=ALIVE_DEAD)
+
+    refused = models.CharField(
+        verbose_name="like is the subject willing to participate in the survey?",
+        max_length=3,
+        choices=YES_NO)
 
     age_in_years = models.IntegerField(
         verbose_name='What is the age of the participant?')

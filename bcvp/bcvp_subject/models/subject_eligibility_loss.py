@@ -18,6 +18,11 @@ class SubjectEligibilityLossManager(models.Manager):
 class SubjectEligibilityLoss(SyncModelMixin, BaseUuidModel):
     """ A model triggered and completed by system when a subject is in-eligible. """
 
+    # Tying this to a relational of SubjectEligibility instead of RegisteredSubject means that a SubjectEligibilityLoss
+    # can only ever be triggered to exist if a SubjectEligibility exists. Implications are that no loss can be created
+    # from the call manager. Even if a participant is discovered to be dead from a phone call, the RA still
+    # needs to fill the SubjectEligibility for that participant, of which a survival_status=DEAD will lead to the
+    # creation of a loss record. The same applies for a participant that refuses.
     subject_eligibility = models.OneToOneField(SubjectEligibility, null=True)
 
     report_datetime = models.DateTimeField(

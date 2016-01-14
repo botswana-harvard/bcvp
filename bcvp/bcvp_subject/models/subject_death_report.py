@@ -2,27 +2,32 @@ from django.db import models
 
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
+from edc_base.model.validators import date_not_future
 from edc_death_report.models import DeathReportModelMixin
 from edc_meta_data.managers import CrfMetaDataManager
 from edc_sync.models import SyncModelMixin
 from edc_visit_tracking.models import CrfModelMixin
+from edc_registration.models import RegisteredSubject
 
-from .subject_visit import SubjectVisit
 
+class SubjectDeathReport(SyncModelMixin, DeathReportModelMixin, BaseUuidModel):
 
-class SubjectDeathReport(CrfModelMixin, SyncModelMixin, DeathReportModelMixin, BaseUuidModel):
+    """ A model completed by the user on prticipant's death. """
 
-    """ A model completed by the user on the mother's death. """
+    registered_subject = models.OneToOneField(RegisteredSubject)
 
-    subject_visit = models.OneToOneField(SubjectVisit)
+    last_date_known_alive = models.DateField(
+        verbose_name="Date subject refused participation",
+        validators=[date_not_future],
+        help_text="Date format is YYYY-MM-DD")
+
+    objects = models.Manager()
 
     history = AuditTrail()
 
-    entry_meta_data_manager = CrfMetaDataManager(SubjectVisit)
-
     def natural_key(self):
-        return self.subject_visit.natural_key()
-    natural_key.dependencies = ['bcvp_subject.subjectvisit']
+        return self.registered_subject.natural_key()
+    natural_key.dependencies = ['edc_registration.registeredsubject']
 
     class Meta:
         app_label = 'bcvp_subject'
