@@ -13,6 +13,9 @@ from edc_sync.models import SyncModelMixin
 
 from bcvp.bcvp.constants import MIN_AGE_OF_CONSENT, MAX_AGE_OF_CONSENT
 
+from .recent_infection import RecentInfection
+from ..exceptions import NoMatchingRecentInfectionException
+
 
 class SubjectEligibilityManager(models.Manager):
 
@@ -105,6 +108,15 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         except SubjectEligibilityLoss.DoesNotExist:
             subject_eligibility_loss = None
         return subject_eligibility_loss
+
+    @property
+    def recent_infection_record(self):
+        """NOTE:This method can be called before registered_suject is created, so DO NOT use any attributes of
+        registered_subject."""
+        try:
+            return RecentInfection.objects.get(age_in_years=self.age_in_years)
+        except RecentInfection.DoesNotExist:
+            raise NoMatchingRecentInfectionException()
 
     class Meta:
         app_label = 'bcvp_subject'
