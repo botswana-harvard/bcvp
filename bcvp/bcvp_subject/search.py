@@ -2,15 +2,15 @@ from django.db.models import Q
 
 from edc_dashboard.search import BaseSearchByWord
 
-from ..models import SubjectConsent
+from .models import SubjectEligibility
 
 
 class SubjectSearchByWord(BaseSearchByWord):
 
     name = 'word'
-    search_model = SubjectConsent
+    search_model = SubjectEligibility
     order_by = ['-created']
-    template = 'subjectconsent_include.html'
+    template = 'subjecteligibility_include.html'
 
     @property
     def qset(self):

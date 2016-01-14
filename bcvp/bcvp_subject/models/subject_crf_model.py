@@ -12,6 +12,14 @@ from .subject_consent import SubjectConsent
 from .subject_visit import SubjectVisit
 
 
+class SubjectCrfManager(models.Manager):
+
+    def get_by_natural_key(self, visit_instance, code, subject_identifier_as_pk):
+        subject_visit = SubjectVisit.objects.get_by_natural_key(visit_instance, code, subject_identifier_as_pk)
+        return self.get(
+            subject_visit=subject_visit)
+
+
 class SubjectCrfModel(CrfModelMixin, SyncModelMixin, OffStudyMixin,
                       RequiresConsentMixin, BaseUuidModel):
 
@@ -22,6 +30,8 @@ class SubjectCrfModel(CrfModelMixin, SyncModelMixin, OffStudyMixin,
     off_study_model = ('bcvp_subject', 'SubjectOffStudy')
 
     subject_visit = models.OneToOneField(SubjectVisit)
+
+    objects = SubjectCrfManager()
 
     history = AuditTrail()
 

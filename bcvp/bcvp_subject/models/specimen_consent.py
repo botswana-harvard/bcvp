@@ -8,9 +8,14 @@ from edc_consent.models.fields import SampleCollectionFieldsMixin, Vulnerability
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
 
-from ..managers import SpecimenConsentManager
-
 from .subject_consent import SubjectConsent
+
+
+class SpecimenConsentManager(models.Manager):
+
+    def get_by_natural_key(self, subject_identifier_as_pk):
+        registered_subject = RegisteredSubject.objects.get_by_natural_key(subject_identifier_as_pk)
+        return self.get(registered_subject=registered_subject)
 
 
 class SpecimenConsent(BaseSpecimenConsent, SyncModelMixin, SampleCollectionFieldsMixin, RequiresConsentMixin,
@@ -49,4 +54,3 @@ class SpecimenConsent(BaseSpecimenConsent, SyncModelMixin, SampleCollectionField
     class Meta:
         app_label = 'bcvp_subject'
         verbose_name = 'Specimen Consent'
-        verbose_name_plural = 'Specimen Consent'

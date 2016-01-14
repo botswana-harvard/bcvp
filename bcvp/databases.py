@@ -38,7 +38,7 @@ except TypeError:
 TRAVIS_MYSQL = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mb',
+        'NAME': 'bcvp',
         'USER': 'travis',
         'HOST': '',
         'PORT': '',
@@ -46,7 +46,7 @@ TRAVIS_MYSQL = {
     },
     'lab_api': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mb_lab',
+        'NAME': 'bcvp_lab',
         'USER': 'travis',
         'HOST': '',
         'PORT': '',
@@ -57,7 +57,7 @@ TRAVIS_MYSQL = {
 TEST_HOSTS_MYSQL = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mb',
+        'NAME': 'bcvp',
         'USER': 'django',
         'PASSWORD': 'django',
         'HOST': '',
@@ -66,7 +66,7 @@ TEST_HOSTS_MYSQL = {
     },
     'lab_api': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mb_lab',
+        'NAME': 'bcvp_lab',
         'USER': 'django',
         'PASSWORD': 'django',
         'HOST': '',
