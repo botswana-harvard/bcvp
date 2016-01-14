@@ -114,6 +114,8 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         """NOTE:This method can be called before registered_suject is created, so DO NOT use any attributes of
         registered_subject."""
         try:
+            # Note that using age_in_years is a temporary to be able to get the tests in the right structure.
+            # When the fields of RecentInfection and SubjectEligibility are finalized then this will be updated.
             return RecentInfection.objects.get(age_in_years=self.age_in_years)
         except RecentInfection.DoesNotExist:
             raise NoMatchingRecentInfectionException()
