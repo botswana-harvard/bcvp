@@ -15,7 +15,6 @@ class SubjectLocatorAdmin(BaseLocatorModelAdmin):
               'registered_subject',
               'date_signed',
               'mail_address',
-              'care_clinic',
               'home_visit_permission',
               'physical_address',
               'may_follow_up',
@@ -31,24 +30,19 @@ class SubjectLocatorAdmin(BaseLocatorModelAdmin):
               'contact_rel',
               'contact_physical_address',
               'contact_cell',
-              'contact_phone',
-              'has_caretaker',
-              'caretaker_name',
-              'caretaker_cell',
-              'caretaker_tel')
+              'contact_phone')
+    list_display = ('subject_visit', 'may_follow_up', 'may_call_work')
 
-    list_display = ('subject_visit',
-                    'care_clinic',
-                    'caretaker_name',
-                    'caretaker_cell',
-                    'caretaker_tel')
-    list_filter = ('care_clinic', )
-    search_fields = ('care_clinic', )
+    list_filter = ('may_follow_up', 'may_call_work')
+
+    search_fields = (
+        'subject_visit__appointment__subject_identifier', 'subject_cell', 'subject_cell_alt',
+        'subject_phone', 'subject_phone_alt', 'subject_work_place', 'subject_work_phone')
+
     radio_fields = {"home_visit_permission": admin.VERTICAL,
                     "may_follow_up": admin.VERTICAL,
                     "may_call_work": admin.VERTICAL,
-                    "may_contact_someone": admin.VERTICAL,
-                    'has_caretaker': admin.VERTICAL, }
+                    "may_contact_someone": admin.VERTICAL}
 
     actions = []  # do not allow export to CSV
 

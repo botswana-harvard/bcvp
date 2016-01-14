@@ -6,11 +6,13 @@ from edc_configuration.defaults import default_global_configuration
 from edc_lab.lab_profile.classes import site_lab_profiles
 
 from bcvp.bcvp.app_configuration import AppConfiguration, study_end_datetime, study_start_datetime
-
-site_lab_profiles.autodiscover()
+from bcvp.load_edc import load_edc
 
 
 class TestConfiguration(TestCase):
+
+    def setUp(self):
+        load_edc()
 
     def test_reads_global_config(self):
         """Assert a value specified in the local app overwrites the default."""

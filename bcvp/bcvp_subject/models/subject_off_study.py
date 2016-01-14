@@ -7,7 +7,7 @@ from .subject_consent import SubjectConsent
 
 class SubjectOffStudy(OffStudyModelMixin, SubjectCrfModel):
 
-    """ A model completed by the user on the visit when the mother is taken off-study. """
+    """ A model completed by the user on the visit when the subject is taken off-study. """
 
     consent_model = SubjectConsent
 

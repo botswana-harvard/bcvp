@@ -5,35 +5,13 @@ from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.db.models import get_models
 from django.views.generic import RedirectView
 
-from edc_call_manager.caller_site import site_model_callers
-from edc_dashboard.section import site_sections
 from edc_dashboard.subject.views import additional_requisition
-from edc_data_manager.data_manager import data_manager
-from edc_lab.lab_profile.classes import site_lab_profiles
-from edc_rule_groups.classes import site_rule_groups
-from edc_visit_schedule.classes import site_visit_schedules
 
-from bcvp.app_configuration import AppConfiguration
+from .load_edc import load_edc
 
-site_lab_profiles.autodiscover()
-AppConfiguration(lab_profiles=site_lab_profiles).prepare()
-site_visit_schedules.autodiscover()
-site_visit_schedules.build_all()
-site_rule_groups.autodiscover()
-data_manager.prepare()
-site_sections.autodiscover()
-site_sections.update_section_lists()
-site_model_callers.autodiscover()
-admin.autodiscover()
-
-for model in get_models():
-    try:
-        django_databrowse.site.register(model)
-    except:
-        pass
+load_edc()
 
 APP_NAME = settings.APP_NAME
 
