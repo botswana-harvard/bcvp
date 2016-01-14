@@ -1,11 +1,15 @@
 from edc_constants.constants import SCREENED
 from edc_registration.models.registered_subject import RegisteredSubject
+from edc_constants.constants import DEAD, YES
 
-from bcvp.bcvp_subject.models import SubjectEligibility, RecentInfection
+from bcvp.bcvp_subject.models import (SubjectEligibility, RecentInfection, SubjectEligibilityLoss,
+                                      SubjectRefusalReport)
+
 
 from ..exceptions import NoMatchingRecentInfectionException
 from .base_test_case import BaseTestCase
 from .factories import SubjectEligibilityFactory
+from bcvp.bcvp_subject.models.subject_death_report import SubjectDeathReport
 
 
 class TestEligibility(BaseTestCase):
@@ -58,3 +62,30 @@ class TestEligibility(BaseTestCase):
         enrollment = SubjectEligibilityFactory(**eligibility_matching_dict)
         with self.assertRaises(NoMatchingRecentInfectionException):
             enrollment.recent_infection_record
+
+    def test_creating_enrollment_loss(self):
+        """Asserts enrollment loss is created when eligibility is failed."""
+        options = {'has_omang': 'No'}
+        subject_eligibility = SubjectEligibilityFactory(**options)
+        self.assertFalse(subject_eligibility.is_eligible)
+        self.assertEqual(SubjectEligibilityLoss.objects.filter(subject_eligibility=subject_eligibility).count(), 1)
+
+    def test_creating_death_status(self):
+        """Asserts death record is created when eligibility is failed by DEATH, with death reason and
+        last date know alive being null, awaiting to be updated."""
+        options = {'survival_status': DEAD}
+        subject_eligibility = SubjectEligibilityFactory(**options)
+        death_report = SubjectDeathReport.objects.filter(registered_subject=subject_eligibility.registered_subject)
+        self.assertTrue(death_report.exists())
+        self.assertIsNone(death_report[0].death_cause)
+        self.assertIsNone(death_report[0].last_date_known_alive)
+
+    def test_creating_refusal_status(self):
+        """Asserts refusal record is created when eligibility is failed by REFUSAL, with refusal reason and
+        date being null, awaiting to be updated."""
+        options = {'refused': YES}
+        subject_eligibility = SubjectEligibilityFactory(**options)
+        refusal_report = SubjectRefusalReport.objects.filter(registered_subject=subject_eligibility.registered_subject)
+        self.assertTrue(refusal_report.exists())
+        self.assertIsNone(refusal_report[0].reason)
+        self.assertIsNone(refusal_report[0].refusal_date)
