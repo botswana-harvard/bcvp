@@ -5,7 +5,7 @@ from edc_base.model.models import BaseUuidModel
 from edc_death_report.models import DeathReportModelMixin
 from edc_meta_data.managers import CrfMetaDataManager
 from edc_sync.models import SyncModelMixin
-from edc_visit_tracking.models.crf_model_mixin import CrfModelMixin
+from edc_visit_tracking.models import CrfModelMixin
 
 from .subject_visit import SubjectVisit
 

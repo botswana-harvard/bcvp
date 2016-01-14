@@ -21,7 +21,7 @@ class SpecimenConsentManager(models.Manager):
 class SpecimenConsent(BaseSpecimenConsent, SyncModelMixin, SampleCollectionFieldsMixin, RequiresConsentMixin,
                       VulnerabilityFieldsMixin, AppointmentMixin, BaseUuidModel):
 
-    """ A model completed by the user when a mother gives consent for specimen storage. """
+    """ A model completed by the user to gives consent for specimen storage. """
 
     consent_model = SubjectConsent
 

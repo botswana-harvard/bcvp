@@ -3,7 +3,7 @@ from edc_base.model.models import BaseUuidModel
 from edc_consent.models import RequiresConsentMixin
 from edc_offstudy.models import OffStudyMixin
 from edc_sync.models import SyncModelMixin
-from edc_meta_data.models.crf_meta_data_mixin import CrfMetaDataMixin
+from edc_meta_data.models import CrfMetaDataMixin
 from edc_visit_tracking.constants import VISIT_REASON_NO_FOLLOW_UP_CHOICES
 from edc_visit_tracking.models import VisitModelMixin, PreviousVisitMixin, CaretakerFieldsMixin
 

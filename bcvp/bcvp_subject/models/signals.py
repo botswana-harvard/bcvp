@@ -2,11 +2,11 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from edc_constants.constants import CONSENTED, SCREENED
+from edc_registration.models import RegisteredSubject
 
 from .subject_consent import SubjectConsent
 from .subject_eligibility import SubjectEligibility
 from .subject_eligibility_loss import SubjectEligibilityLoss
-from edc_registration.models.registered_subject import RegisteredSubject
 
 
 @receiver(post_save, weak=False, dispatch_uid="subject_consent_on_post_save")
