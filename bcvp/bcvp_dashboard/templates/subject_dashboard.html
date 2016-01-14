@@ -1,0 +1,17 @@
+{% extends "base_registered_subject_dashboard.html"%}
+{% load common_tags %}
+{% load crypto_tags%}
+{% load admin_urls %}
+{% load url from future %}
+
+{% block clinic_dashboard_marquee %}
+<table>
+    <tr style="background:lightyellow;">
+        <td><B>Name:</B> {{subject_consent.first_name|encrypted }} ({{ subject_consent.initials|encrypted }}) </td>
+        <td><B>Gender:</B> {{subject_consent.gender|gender }}</td> 
+        <td><B>Born:</B> {{subject_consent.dob|date:"Y-m-d" }}</td> 
+        <td><B>Age:</B> {{subject_consent.dob|age }}</td>
+        <td><B>Consented:</B> {{subject_consent.consent_datetime|date:"Y-m-d H:i" }}</td>
+    </tr>
+</table>
+{% endblock %}
