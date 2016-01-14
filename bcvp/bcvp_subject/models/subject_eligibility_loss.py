@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import get_model
 from django.utils import timezone
 
 from edc_base.audit_trail import AuditTrail
@@ -12,7 +11,6 @@ from .subject_eligibility import SubjectEligibility
 class SubjectEligibilityLossManager(models.Manager):
 
     def get_by_natural_key(self, eligibility_id, report_datetime):
-        SubjectEligibility = get_model('bcvp_subject', 'SubjectEligibility')
         subject_eligibility = SubjectEligibility.objects.get_by_natural_key(eligibility_id=eligibility_id)
         return self.get(subject_eligibility=subject_eligibility, report_datetime=report_datetime)
 

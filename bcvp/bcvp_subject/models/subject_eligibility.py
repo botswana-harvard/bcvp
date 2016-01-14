@@ -57,10 +57,12 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     is_eligible = models.BooleanField(
         default=False,
         editable=False)
+
     # is updated via signal once subject is consented
     is_consented = models.BooleanField(
         default=False,
         editable=False)
+
     # updated by signal on saving consent, is determined by participant citizenship
     has_passed_consent = models.BooleanField(
         default=False,

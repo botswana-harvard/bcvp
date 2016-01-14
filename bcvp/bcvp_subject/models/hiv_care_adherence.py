@@ -154,7 +154,7 @@ class HivCareAdherence(SubjectCrfModel):
 
     arv_evidence = models.CharField(
         verbose_name="Is there evidence [OPD card, tablets, masa number] that the participant is on therapy?",
-        choices=YES_NO,  # Q17
+        choices=YES_NO,
         null=True,
         blank=True,
         max_length=3,
@@ -164,5 +164,5 @@ class HivCareAdherence(SubjectCrfModel):
 
     class Meta:
         app_label = 'bcvp_subject'
-        verbose_name = "HIV care & Adherence"
-        verbose_name_plural = "HIV care & Adherence"
+        verbose_name = "HIV Care & Adherence"
+        verbose_name_plural = "HIV Care & Adherence"
