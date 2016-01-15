@@ -56,7 +56,11 @@ def subject_eligibility_on_post_save(sender, instance, raw, created, using, **kw
                 try:
                     registered_subject = RegisteredSubject.objects.get(
                         screening_identifier=instance.eligibility_id,
-                        subject_type='subject')
+                        subject_type='subject',
+                        subject_identifier=instance.recent_infection_record.subject_identifier,
+                        dob=instance.dob,
+                        identity=instance.identity,
+                        initials=instance.initials)
                     SubjectConsent.objects.get(registered_subject=registered_subject)
                 except RegisteredSubject.DoesNotExist:
                     registered_subject = create_registered_subject(instance)
@@ -76,7 +80,11 @@ def create_registered_subject(instance):
         screening_identifier=instance.eligibility_id,
         screening_age_in_years=instance.age_in_years,
         subject_type='subject',
-        user_created=instance.user_created)
+        user_created=instance.user_created,
+        subject_identifier=instance.recent_infection_record.subject_identifier,
+        dob=instance.dob,
+        identity=instance.identity,
+        initials=instance.initials)
 
 
 def update_registered_subject(registered_subject, instance):

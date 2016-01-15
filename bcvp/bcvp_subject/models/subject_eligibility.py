@@ -2,11 +2,13 @@ import uuid
 
 from django.db import models
 from django.db.models import get_model
+from django.core.validators import RegexValidator
 
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
+from edc_base.encrypted_fields import EncryptedCharField, IdentityField, FirstnameField, LastnameField
 from edc_base.model.validators import datetime_not_before_study_start, datetime_not_future
-from edc_constants.choices import YES_NO, ALIVE_DEAD, DEAD, ALIVE
+from edc_constants.choices import YES_NO, ALIVE_DEAD, DEAD
 from edc_constants.constants import NO, YES
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
@@ -43,6 +45,40 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
             datetime_not_future],
         help_text='Date and time of assessing eligibility')
 
+    first_name = FirstnameField(
+        null=True,
+    )
+
+    last_name = LastnameField(
+        verbose_name="Last name",
+        null=True)
+
+    initials = EncryptedCharField(
+        validators=[RegexValidator(
+            regex=r'^[A-Z]{2,3}$',
+            message=('Ensure initials consist of letters '
+                     'only in upper case, no spaces.'))],
+        null=True)
+
+    gender = models.CharField(
+        verbose_name="Gender",
+        max_length=1,
+        null=True,
+        blank=False)
+
+    dob = models.DateField(
+        verbose_name="Date of birth",
+        null=True,
+        blank=False,
+        help_text="Format is YYYY-MM-DD")
+
+    age_in_years = models.IntegerField(
+        verbose_name='What is the age of the participant?')
+
+    identity = IdentityField(
+        null=True,
+        blank=True)
+
     survival_status = models.CharField(
         verbose_name="what is the survival status of the participant",
         max_length=5,
@@ -52,9 +88,6 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         verbose_name="is the subject willing to participate in the survey?",
         max_length=3,
         choices=YES_NO)
-
-    age_in_years = models.IntegerField(
-        verbose_name='What is the age of the participant?')
 
     has_omang = models.CharField(
         verbose_name="Do you have an OMANG?",
@@ -132,7 +165,7 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         try:
             # Note that using age_in_years is a temporary to be able to get the tests in the right structure.
             # When the fields of RecentInfection and SubjectEligibility are finalized then this will be updated.
-            return RecentInfection.objects.get(age_in_years=self.age_in_years)
+            return RecentInfection.objects.get(dob=self.dob, initials=self.initials, identity=self.identity)
         except RecentInfection.DoesNotExist:
             raise NoMatchingRecentInfectionException()
 
