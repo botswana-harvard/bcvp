@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from edc_constants.constants import CONSENTED, SCREENED
@@ -75,6 +75,13 @@ def refusal_report_on_post_save(sender, instance, raw, created, using, **kwargs)
         if isinstance(instance, SubjectRefusalReport):
             instance.subject_eligibility.refusal_filled = True
             instance.subject_eligibility.save(update_fields=['refusal_filled'])
+
+
+@receiver(post_delete, weak=False, dispatch_uid="refusal_report_on_delete")
+def refusal_report_on_delete(sender, instance, using, **kwargs):
+    if isinstance(instance, SubjectRefusalReport):
+        instance.subject_eligibility.refusal_filled = False
+        instance.subject_eligibility.save(update_fields=['refusal_filled'])
 
 
 def create_registered_subject(instance):

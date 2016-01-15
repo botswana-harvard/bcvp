@@ -27,6 +27,7 @@
                 {% endif %}
                 <td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' subject_eligibility.pk %}?&next=section_url&section_name=subject">edit eligibility</A></td>
                 <td>{{subject_eligibility.subject_eligibility_loss.reason_ineligible|default:"-----" }}</td>
+                {{subject_eligibility.refusal_filled}}
                 {% if subject_eligibility.refusal_filled %}
                     {% if subject_eligibility.subject_refusal.reason == None %}
                         <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">add refusal report</A></td>
