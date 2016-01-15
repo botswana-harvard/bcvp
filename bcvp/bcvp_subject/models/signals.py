@@ -7,6 +7,8 @@ from edc_registration.models import RegisteredSubject
 from .subject_consent import SubjectConsent
 from .subject_eligibility import SubjectEligibility
 from .subject_eligibility_loss import SubjectEligibilityLoss
+from bcvp.bcvp_subject.models.subject_death_report import SubjectDeathReport
+from bcvp.bcvp_subject.models.subject_refusal_report import SubjectRefusalReport
 
 
 @receiver(post_save, weak=False, dispatch_uid="subject_consent_on_post_save")
@@ -67,6 +69,22 @@ def subject_eligibility_on_post_save(sender, instance, raw, created, using, **kw
                     registered_subject.save()
             instance.subject_refusal_on_post_save
             instance.subject_death_on_post_save
+
+
+@receiver(post_save, weak=False, dispatch_uid="death_report_on_post_save")
+def death_report_on_post_save(sender, instance, raw, created, using, **kwargs):
+    if not raw:
+        if isinstance(instance, SubjectDeathReport):
+            instance.subject_eligibility.death_filled = True
+            instance.subject_eligibility.save(update_fields=['death_filled'])
+
+
+@receiver(post_save, weak=False, dispatch_uid="refusal_report_on_post_save")
+def refusal_report_on_post_save(sender, instance, raw, created, using, **kwargs):
+    if not raw:
+        if isinstance(instance, SubjectRefusalReport):
+            instance.subject_eligibility.refusal_filled = True
+            instance.subject_eligibility.save(update_fields=['refusal_filled'])
 
 
 def create_registered_subject(instance):
