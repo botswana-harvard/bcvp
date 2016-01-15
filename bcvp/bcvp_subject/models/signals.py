@@ -13,6 +13,10 @@ from .subject_eligibility_loss import SubjectEligibilityLoss
 def subject_consent_on_post_save(sender, instance, raw, created, using, **kwargs):
     if not raw:
         if isinstance(instance, SubjectConsent):
+            subject_eligibility = SubjectEligibility.objects.get(
+                registered_subject=instance.registered_subject)
+            subject_eligibility.is_consented = True
+            subject_eligibility.save(update_fields=['is_consented'])
             instance.registered_subject.registration_datetime = instance.consent_datetime
             instance.registered_subject.registration_status = CONSENTED
             instance.registered_subject.save(update_fields=['registration_datetime', 'registration_status'])
