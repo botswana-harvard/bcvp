@@ -1,6 +1,6 @@
 from edc_constants.constants import SCREENED
 from edc_registration.models.registered_subject import RegisteredSubject
-from edc_constants.constants import DEAD, YES
+from edc_constants.constants import DEAD, YES, NO
 
 from bcvp.bcvp_subject.models import (SubjectEligibility, RecentInfection, SubjectEligibilityLoss,
                                       SubjectRefusalReport)
@@ -75,7 +75,8 @@ class TestEligibility(BaseTestCase):
         last date know alive being null, awaiting to be updated."""
         options = {'survival_status': DEAD}
         subject_eligibility = SubjectEligibilityFactory(**options)
-        death_report = SubjectDeathReport.objects.filter(registered_subject=subject_eligibility.registered_subject)
+        self.assertFalse(subject_eligibility.is_eligible)
+        death_report = SubjectDeathReport.objects.filter(subject_eligibility=subject_eligibility)
         self.assertTrue(death_report.exists())
         self.assertIsNone(death_report[0].death_cause)
         self.assertIsNone(death_report[0].last_date_known_alive)
@@ -85,7 +86,20 @@ class TestEligibility(BaseTestCase):
         date being null, awaiting to be updated."""
         options = {'refused': YES}
         subject_eligibility = SubjectEligibilityFactory(**options)
-        refusal_report = SubjectRefusalReport.objects.filter(registered_subject=subject_eligibility.registered_subject)
+        self.assertFalse(subject_eligibility.is_eligible)
+        refusal_report = SubjectRefusalReport.objects.filter(subject_eligibility=subject_eligibility)
         self.assertTrue(refusal_report.exists())
         self.assertIsNone(refusal_report[0].reason)
         self.assertIsNone(refusal_report[0].refusal_date)
+
+    def test_resetting_refusal_status(self):
+        """Asserts refusal and loss records are deleted when eligibility from a previous refusal to participate."""
+        options = {'refused': YES}
+        subject_eligibility = SubjectEligibilityFactory(**options)
+        self.assertFalse(subject_eligibility.is_eligible)
+        refusal_report = SubjectRefusalReport.objects.filter(subject_eligibility=subject_eligibility)
+        self.assertTrue(refusal_report.exists())
+        subject_eligibility.refused = NO
+        subject_eligibility.save()
+        refusal_report = SubjectRefusalReport.objects.filter(subject_eligibility=subject_eligibility)
+        self.assertFalse(refusal_report.exists())

@@ -10,9 +10,9 @@ from .subject_eligibility import SubjectEligibility
 
 class SubjectEligibilityLossManager(models.Manager):
 
-    def get_by_natural_key(self, eligibility_id, report_datetime):
+    def get_by_natural_key(self, eligibility_id):
         subject_eligibility = SubjectEligibility.objects.get_by_natural_key(eligibility_id=eligibility_id)
-        return self.get(subject_eligibility=subject_eligibility, report_datetime=report_datetime)
+        return self.get(subject_eligibility=subject_eligibility)
 
 
 class SubjectEligibilityLoss(SyncModelMixin, BaseUuidModel):
@@ -40,7 +40,8 @@ class SubjectEligibilityLoss(SyncModelMixin, BaseUuidModel):
     history = AuditTrail()
 
     def natural_key(self):
-        return (self.subject_eligibility.natural_key(), self.report_datetime, )
+        return self.subject_eligibility.natural_key()
+    natural_key.dependencies = ['bcvp_subject.subjecteligibility']
 
     def ineligibility(self):
         return self.reason_ineligible or []

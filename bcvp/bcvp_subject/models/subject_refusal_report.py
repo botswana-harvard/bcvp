@@ -3,21 +3,30 @@ from django.db import models
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
 from edc_sync.models import SyncModelMixin
-from edc_visit_tracking.models import CrfModelMixin
 from edc_base.model.fields import OtherCharField
 from edc_base.model.validators import date_not_future, date_not_before_study_start
 from edc_constants.choices import WHYNOPARTICIPATE_CHOICE
-from edc_registration.models import RegisteredSubject
+
+from .subject_eligibility import SubjectEligibility
 
 
-class SubjectRefusalReport (SyncModelMixin, BaseUuidModel):
+class SubjectRefusalReportManager(models.Manager):
+
+    def get_by_natural_key(self, eligibility_id):
+        subject_eligibility = SubjectEligibility.objects.get_by_natural_key(eligibility_id=eligibility_id)
+        return self.get(subject_eligibility=subject_eligibility)
+
+
+class SubjectRefusalReport(SyncModelMixin, BaseUuidModel):
     """A model completed by the user that captures reasons for a
     potentially eligible participant refusing participating in BCVP."""
-    registered_subject = models.OneToOneField(RegisteredSubject)
+    subject_eligibility = models.OneToOneField(SubjectEligibility)
 
     refusal_date = models.DateField(
         verbose_name="Date subject refused participation",
         validators=[date_not_before_study_start, date_not_future],
+        blank=True,
+        null=True,
         help_text="Date format is YYYY-MM-DD")
 
     reason = models.CharField(
@@ -26,17 +35,19 @@ class SubjectRefusalReport (SyncModelMixin, BaseUuidModel):
                      " you do not want to participate in this study?",
         max_length=50,
         choices=WHYNOPARTICIPATE_CHOICE,
+        blank=True,
+        null=True,
         help_text="")
 
     reason_other = OtherCharField()
 
     history = AuditTrail()
 
-    objects = models.Manager()
+    objects = SubjectRefusalReportManager()
 
     def natural_key(self):
-        return self.registered_subject.natural_key()
-    natural_key.dependencies = ['edc_registration.registeredsubject']
+        return self.subject_eligibility.natural_key()
+    natural_key.dependencies = ['bcvp_subject.subjecteligibility']
 
     def get_registration_datetime(self):
         return self.report_datetime

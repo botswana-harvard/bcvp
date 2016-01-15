@@ -6,8 +6,8 @@ from django.db.models import get_model
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
 from edc_base.model.validators import datetime_not_before_study_start, datetime_not_future
-from edc_constants.choices import YES_NO, ALIVE_DEAD
-from edc_constants.constants import NO
+from edc_constants.choices import YES_NO, ALIVE_DEAD, DEAD, ALIVE
+from edc_constants.constants import NO, YES
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
 
@@ -19,8 +19,8 @@ from ..exceptions import NoMatchingRecentInfectionException
 
 class SubjectEligibilityManager(models.Manager):
 
-    def get_by_natural_key(self, eligibility_id, report_datetime):
-        return self.get(eligibility_id=eligibility_id, report_datetime=report_datetime)
+    def get_by_natural_key(self, eligibility_id):
+        return self.get(eligibility_id=eligibility_id)
 
 
 class SubjectEligibility (SyncModelMixin, BaseUuidModel):
@@ -67,7 +67,8 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         null=True,
         editable=False)
 
-    is_eligible = models.BooleanField(
+    # NullBoolean NULL => Zero State, False => Failed Eligibility, True => Passed Eligibility.
+    is_eligible = models.NullBooleanField(
         default=False,
         editable=False)
 
@@ -94,6 +95,10 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         """Returns a tuple (True, None) if subject is eligible otherwise (False, error_messsage) where
         error message is the reason for eligibility test failed."""
         error_message = []
+        if self.survival_status == DEAD:
+            error_message.append('Subject is dead')
+        if self.refused == YES:
+            error_message.append('Subject is has refused participation')
         if self.age_in_years < MIN_AGE_OF_CONSENT:
             error_message.append('Subject is under {}'.format(MIN_AGE_OF_CONSENT))
         if self.age_in_years > MAX_AGE_OF_CONSENT:
@@ -107,7 +112,7 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         return "{0} ({1})".format(self.eligibility_id, self.age_in_years)
 
     def natural_key(self):
-        return (self.eligibility_id, self.report_datetime, )
+        return (self.eligibility_id, )
 
     @property
     def subject_eligibility_loss(self):
@@ -129,6 +134,39 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
             return RecentInfection.objects.get(age_in_years=self.age_in_years)
         except RecentInfection.DoesNotExist:
             raise NoMatchingRecentInfectionException()
+
+#     @property
+#     def subject_death_on_post_save(self):
+#         """If survival status is dead, then create SubjectDeathReport on post save with a null death_cause and
+#         last_date_known_alive fields. In UI force user to open and edit this record to enter death_cause and
+#         last_date_known_alive among others."""
+#         SubjectEligibilityLoss = get_model('bcvp_subject', 'SubjectEligibilityLoss')
+#         if self.survival_status == DEAD and not SubjectDeathReport.objects.filter().exists():
+#             SubjectDeathReport.objects.create()
+#         # Can a person really come back from the dead? yes, consider witchcraft.
+#         elif self.survival_status == ALIVE and SubjectDeathReport.objects.filter().exists():
+#             SubjectDeathReport.objects.filter().delete()
+#             SubjectEligibilityLoss.objects.filter(subject_eligibility_id=self.id).delete()
+#         # else all is good, do nothing.
+#         else:
+#             pass
+
+    @property
+    def subject_refusal_on_post_save(self):
+        """If refused is Yes, then create SubjectRefusalReport on post save with a null reason and
+        refusal_date fields. In UI force user to open and edit this record to enter reason and
+        refusal_date among others."""
+        SubjectEligibilityLoss = get_model('bcvp_subject', 'SubjectEligibilityLoss')
+        SubjectRefusalReport = get_model('bcvp_subject', 'SubjectRefusalReport')
+        if self.refused == YES and not SubjectRefusalReport.objects.filter(subject_eligibility=self).exists():
+            SubjectRefusalReport.objects.create(subject_eligibility=self)
+        # This is necessary for those that initially refuse and later change their mind to participate.
+        elif self.refused == NO and SubjectRefusalReport.objects.filter(subject_eligibility=self).exists():
+            SubjectRefusalReport.objects.filter(subject_eligibility=self).delete()
+            SubjectEligibilityLoss.objects.filter(subject_eligibility_id=self.id).delete()
+        # else all is good, do nothing.
+        else:
+            pass
 
     class Meta:
         app_label = 'bcvp_subject'
