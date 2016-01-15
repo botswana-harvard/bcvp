@@ -78,7 +78,6 @@ INSTALLED_APPS = [
     'edc_appointment',
     'edc_base',
     'edc_call_manager',
-    'edc_code_lists',
     'edc_configuration',
     'edc_consent',
     'edc_constants',
@@ -231,10 +230,6 @@ else:
 
 SITE_CODE = '10'
 SERVER_DEVICE_ID_LIST = [91, 92, 93, 94, 95, 96, 97, 99]
-MIDDLEMAN_DEVICE_ID_LIST = [98]
-if str(DEVICE_ID) == '98':
-    PROJECT_TITLE = 'RESERVED FOR MIDDLE MAN'
-
 CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$'
 TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'
 DEFAULT_STUDY_SITE = '10'
