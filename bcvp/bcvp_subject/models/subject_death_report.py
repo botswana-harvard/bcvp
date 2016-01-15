@@ -2,8 +2,10 @@ from django.db import models
 
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
+from edc_base.model.fields import OtherCharField
 from edc_base.model.validators import date_not_future
-from edc_death_report.models import DeathReportModelMixin
+from edc_death_report.models import Cause
+# from edc_death_report.models import DeathReportModelMixin
 from edc_sync.models import SyncModelMixin
 
 from .subject_eligibility import SubjectEligibility
@@ -16,16 +18,31 @@ class SubjectDeathReportManager(models.Manager):
         return self.get(subject_eligibility=subject_eligibility)
 
 
-class SubjectDeathReport(SyncModelMixin, DeathReportModelMixin, BaseUuidModel):
+class SubjectDeathReport(SyncModelMixin, BaseUuidModel):
 
-    """ A model completed by the user on prticipant's death. """
+    """ A model completed by the user on potential participant's death. """
 
     subject_eligibility = models.OneToOneField(SubjectEligibility)
 
     last_date_known_alive = models.DateField(
         verbose_name="Date subject refused participation",
+        blank=True,
+        null=True,
         validators=[date_not_future],
         help_text="Date format is YYYY-MM-DD")
+
+    death_cause = models.ForeignKey(
+        to=Cause,
+        verbose_name=(
+            'What is the primary source of cause of death information? '
+            '(if multiple source of information, '
+            'list one with the smallest number closest to the top of the list) '),
+        null=True)
+
+    cause_other = OtherCharField(
+        verbose_name="if other specify...",
+        blank=True,
+        null=True)
 
     objects = SubjectDeathReportManager()
 

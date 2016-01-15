@@ -84,7 +84,7 @@ class TestEligibility(BaseTestCase):
     def test_creating_refusal_status(self):
         """Asserts refusal record is created when eligibility is failed by REFUSAL, with refusal reason and
         date being null, awaiting to be updated."""
-        options = {'refused': YES}
+        options = {'willing_to_paticipate': NO}
         subject_eligibility = SubjectEligibilityFactory(**options)
         self.assertFalse(subject_eligibility.is_eligible)
         refusal_report = SubjectRefusalReport.objects.filter(subject_eligibility=subject_eligibility)
@@ -94,12 +94,12 @@ class TestEligibility(BaseTestCase):
 
     def test_resetting_refusal_status(self):
         """Asserts refusal and loss records are deleted when eligibility from a previous refusal to participate."""
-        options = {'refused': YES}
+        options = {'willing_to_paticipate': NO}
         subject_eligibility = SubjectEligibilityFactory(**options)
         self.assertFalse(subject_eligibility.is_eligible)
         refusal_report = SubjectRefusalReport.objects.filter(subject_eligibility=subject_eligibility)
         self.assertTrue(refusal_report.exists())
-        subject_eligibility.refused = NO
+        subject_eligibility.willing_to_paticipate = YES
         subject_eligibility.save()
         refusal_report = SubjectRefusalReport.objects.filter(subject_eligibility=subject_eligibility)
         self.assertFalse(refusal_report.exists())

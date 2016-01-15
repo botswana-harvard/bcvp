@@ -23,7 +23,7 @@ class SubjectEligibilityLoss(SyncModelMixin, BaseUuidModel):
     # from the call manager. Even if a participant is discovered to be dead from a phone call, the RA still
     # needs to fill the SubjectEligibility for that participant, of which a survival_status=DEAD will lead to the
     # creation of a loss record. The same applies for a participant that refuses.
-    subject_eligibility = models.OneToOneField(SubjectEligibility, null=True)
+    subject_eligibility = models.OneToOneField(SubjectEligibility)
 
     report_datetime = models.DateTimeField(
         verbose_name="Report Date and Time",
