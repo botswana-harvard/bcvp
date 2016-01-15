@@ -2,6 +2,7 @@ from edc_dashboard.subject import RegisteredSubjectDashboard
 
 from bcvp.bcvp_lab.models import SubjectRequisition
 from bcvp.bcvp_subject.models import SubjectVisit, SubjectConsent, SubjectLocator
+from bcvp.bcvp_subject.models.subject_eligibility import SubjectEligibility
 
 
 class SubjectDashboard(RegisteredSubjectDashboard):
@@ -16,7 +17,7 @@ class SubjectDashboard(RegisteredSubjectDashboard):
         '(?P<appointment_code>{appointment_code})/$'] + RegisteredSubjectDashboard.urlpatterns
     urlpattern_options = dict(
         RegisteredSubjectDashboard.urlpattern_options,
-        dashboard_model=RegisteredSubjectDashboard.urlpattern_options['dashboard_model'] + '|subject_consent',
+        dashboard_model=RegisteredSubjectDashboard.urlpattern_options['dashboard_model'] + '|subject_eligibility',
         dashboard_type='subject',
         appointment_code='1000', )
 
@@ -26,6 +27,7 @@ class SubjectDashboard(RegisteredSubjectDashboard):
         self.visit_model = SubjectVisit
         self.dashboard_type_list = ['subject']
         self.membership_form_category = ['subject']
+        self.dashboard_models['subject_eligibility'] = SubjectEligibility
         self.dashboard_models['subject_consent'] = SubjectConsent
         self.dashboard_models['visit'] = SubjectVisit
         self.requisition_model = SubjectRequisition

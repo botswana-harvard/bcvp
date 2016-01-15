@@ -13,27 +13,26 @@
         <th>User Created</th>  
         <th>Date Created</th>
         <th>Host</th>       
-        
-        </thead>
+        </thead></tr>
         <tbody>
-      
       {% for subject_eligibility in search_result.object_list %}
-                <tr class="{% cycle 'row2' 'row1' %}">
+          <tr class="{% cycle 'row2' 'row1' %}">
                 {% if subject_eligibility.is_consented %}
                     <td><A href="{% url 'subject_dashboard_url' dashboard_type='subject' dashboard_model='subject_eligibility' dashboard_id=subject_eligibility.pk show='appointments' %}"><div nowrap>{{ subject_eligibility.registered_subject.subject_identifier }}</div></A></td>
                 {% elif subject_eligibility.is_eligible %}
-                    <td><A href="{% url 'admin:mb_subject_subjectconsent_add' %}?registered_subject={{subject_eligibility.registered_subject.pk}}&next=section_url&section_name=subject">add subject consent</A></td>
+                    <td><A href="{% url 'admin:bcvp_subject_subjectconsent_add' %}?registered_subject={{subject_eligibility.registered_subject.pk}}&next=section_url&section_name=subject">add subject consent</A></td>
                 {% else %}
                     <td>{{ subject_eligibility.ineligibility }}</td>
                 {% endif %}
                 
-                <td><A href="{% url 'admin:mb_subject_subjecteligibility_change' subject_eligibility.pk %}?&next=section_url&section_name=subject">edit eligibility</A></td>
+                <td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' subject_eligibility.pk %}?&next=section_url&section_name=subject">edit eligibility</A></td>
                 <td>{{subject_eligibility.subject_eligibility_loss.reason_ineligible|default:"-----" }}</td>
                 <td>{{subject_eligibility.report_datetime}}</td>
                 <td>{{subject_eligibility.age_in_years}}</td>
                 <td>{{subject_eligibility.user_created}}</td>
                 <td>{{subject_eligibility.created|date:"d M Y H:i"}}</td>
                 <td>{{subject_eligibility.hostname_created}}</td>
+         </tr>
 
       {% endfor %}
       <tr><td colspan="9">{{ search_result.object_list.count }} subject eligibility records found.</td></tr>
