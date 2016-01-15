@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
@@ -6,6 +7,7 @@ from edc_base.model.fields import OtherCharField
 from edc_base.model.validators import date_not_future
 from edc_death_report.models import Cause
 # from edc_death_report.models import DeathReportModelMixin
+from edc_base.model.validators import datetime_not_before_study_start, datetime_not_future
 from edc_sync.models import SyncModelMixin
 
 from .subject_eligibility import SubjectEligibility
@@ -43,6 +45,14 @@ class SubjectDeathReport(SyncModelMixin, BaseUuidModel):
         verbose_name="if other specify...",
         blank=True,
         null=True)
+
+    report_datetime = models.DateTimeField(
+        verbose_name="Report Date and Time",
+        validators=[
+            datetime_not_before_study_start,
+            datetime_not_future],
+        default=timezone.now,
+        help_text='Date and time of reporting death')
 
     objects = SubjectDeathReportManager()
 

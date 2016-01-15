@@ -7,4 +7,5 @@ from .subject_death_report_form import SubjectDeathReportForm
 from .subject_eligibility_form import SubjectEligibilityForm
 from .subject_locator_form import SubjectLocatorForm
 from .subject_off_study_form import SubjectOffStudyForm
+from .subject_refusal_report_form import SubjectRefusalReportForm
 from .subject_visit_form import SubjectVisitForm

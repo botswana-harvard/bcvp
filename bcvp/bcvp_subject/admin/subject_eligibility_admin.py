@@ -16,8 +16,14 @@ class SubjectEligibilityAdmin(BaseModelAdmin):
     fields = ('eligibility_id',
               'report_datetime',
               'age_in_years',
-              'has_omang')
-    radio_fields = {'has_omang': admin.VERTICAL}
+              'has_omang',
+              'survival_status',
+              'willing_to_paticipate')
+    radio_fields = {
+        'has_omang': admin.VERTICAL,
+        'survival_status': admin.VERTICAL,
+        'willing_to_paticipate': admin.VERTICAL,
+    }
 
     readonly_fields = ('eligibility_id',)
     list_display = ('report_datetime', 'age_in_years', 'is_eligible', 'is_consented')

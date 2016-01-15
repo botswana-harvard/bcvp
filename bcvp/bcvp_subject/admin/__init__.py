@@ -8,4 +8,5 @@ from .subject_eligibility_admin import SubjectEligibilityAdmin
 from .subject_eligibility_loss_admin import SubjectEligibilityLossAdmin
 from .subject_locator_admin import SubjectLocatorAdmin
 from .subject_off_study_admin import SubjectOffStudyAdmin
+from .subject_refusal_report_admin import SubjectRefusalReportAdmin
 from .subject_visit_admin import SubjectVisitAdmin
