@@ -66,7 +66,6 @@ def subject_eligibility_on_post_save(sender, instance, raw, created, using, **kw
                     registered_subject = update_registered_subject(registered_subject, instance)
                     registered_subject.save()
             instance.subject_refusal_on_post_save
-            instance.subject_death_on_post_save
 
 
 def create_registered_subject(instance):
