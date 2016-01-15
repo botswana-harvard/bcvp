@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from edc_constants.constants import CONSENTED, SCREENED
@@ -7,6 +7,7 @@ from edc_registration.models import RegisteredSubject
 from .subject_consent import SubjectConsent
 from .subject_eligibility import SubjectEligibility
 from .subject_eligibility_loss import SubjectEligibilityLoss
+from .subject_refusal_report import SubjectRefusalReport
 
 
 @receiver(post_save, weak=False, dispatch_uid="subject_consent_on_post_save")
@@ -70,6 +71,21 @@ def subject_eligibility_on_post_save(sender, instance, raw, created, using, **kw
                     registered_subject = update_registered_subject(registered_subject, instance)
                     registered_subject.save()
             instance.subject_refusal_on_post_save
+
+
+@receiver(post_save, weak=False, dispatch_uid="refusal_report_on_post_save")
+def refusal_report_on_post_save(sender, instance, raw, created, using, **kwargs):
+    if not raw:
+        if isinstance(instance, SubjectRefusalReport):
+            instance.subject_eligibility.refusal_filled = True
+            instance.subject_eligibility.save(update_fields=['refusal_filled'])
+
+
+@receiver(post_delete, weak=False, dispatch_uid="refusal_report_on_delete")
+def refusal_report_on_delete(sender, instance, using, **kwargs):
+    if isinstance(instance, SubjectRefusalReport):
+        instance.subject_eligibility.refusal_filled = False
+        instance.subject_eligibility.save(update_fields=['refusal_filled'])
 
 
 def create_registered_subject(instance):

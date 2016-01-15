@@ -9,7 +9,6 @@
         <th>Eligibility</th>
         <th>Loss</th>
         <th>Refusal</th>
-        <th>Death</th>
         <th>Registration Date/Time</th>
         <th>Age</th>  
         <th>User Created</th>  
@@ -26,16 +25,15 @@
                 {% else %}
                     <td>{{ subject_eligibility.ineligibility }}</td>
                 {% endif %}
-                
                 <td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' subject_eligibility.pk %}?&next=section_url&section_name=subject">edit eligibility</A></td>
                 <td>{{subject_eligibility.subject_eligibility_loss.reason_ineligible|default:"-----" }}</td>
-                {%if subject_eligibility.willing_to_paticipate == "No" %}
-                    <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_add' %}?registered_subject={{subject_refusal_report.subject_eligibility.registered_subject.pk}}&next=section_url&section_name=subject">add subject refusal report</A></td>
-                {% else %}
-                    <td>-----</td>
-                {% endif %}
-                {%if subject_eligibility.survival_status == "dead" %}
-                    <td><A href="{% url 'admin:bcvp_subject_subjectdeathreport_add' %}?registered_subject={{subject_death_report.subject_eligibility.registered_subject.pk}}&next=section_url&section_name=subject">add death report</A></td>
+                {{subject_eligibility.refusal_filled}}
+                {% if subject_eligibility.refusal_filled %}
+                    {% if subject_eligibility.subject_refusal.reason == None %}
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">add refusal report</A></td>
+                    {% else %}
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">edit refusal report</A></td>
+                    {% endif %}
                 {% else %}
                     <td>-----</td>
                 {% endif %}
@@ -45,7 +43,6 @@
                 <td>{{subject_eligibility.created|date:"d M Y H:i"}}</td>
                 <td>{{subject_eligibility.hostname_created}}</td>
          </tr>
-
       {% endfor %}
       <tr><td colspan="9">{{ search_result.object_list.count }} subject eligibility records found.</td></tr>
       </tbody>

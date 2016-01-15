@@ -15,8 +15,9 @@ from edc_sync.models import SyncModelMixin
 
 from bcvp.bcvp.constants import MIN_AGE_OF_CONSENT, MAX_AGE_OF_CONSENT
 
-from .recent_infection import RecentInfection
 from ..exceptions import NoMatchingRecentInfectionException
+
+from .recent_infection import RecentInfection
 
 
 class SubjectEligibilityManager(models.Manager):
@@ -115,6 +116,11 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         default=False,
         editable=False)
 
+    # updated by signal on saving refusal report
+    refusal_filled = models.BooleanField(
+        default=False,
+        editable=False)
+
     objects = SubjectEligibilityManager()
 
     history = AuditTrail()
@@ -191,6 +197,14 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
                 pass
         else:
             pass
+
+    @property
+    def subject_refusal(self):
+        SubjectRefusalReport = get_model('bcvp_subject', 'SubjectRefusalReport')
+        try:
+            return SubjectRefusalReport.objects.get(subject_eligibility=self)
+        except SubjectRefusalReport.DoesNotExist:
+            return None
 
     class Meta:
         app_label = 'bcvp_subject'

@@ -21,8 +21,6 @@ class SubjectVisit(OffStudyMixin, SyncModelMixin, PreviousVisitMixin, CrfMetaDat
 
     off_study_model = ('bcvp_subject', 'SubjectOffStudy')
 
-    death_report_model = ('bcvp_subject', 'SubjectDeathReport')
-
     history = AuditTrail()
 
     def __unicode__(self):
