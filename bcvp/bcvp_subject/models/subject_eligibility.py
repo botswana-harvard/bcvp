@@ -134,8 +134,7 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
 
     @property
     def recent_infection_record(self):
-        """NOTE:This method can be called before registered_suject is created, so DO NOT use any attributes of
-        registered_subject."""
+        """Return a RecentInfection record that matches this eligibility record"""
         try:
             # Note that using age_in_years is a temporary to be able to get the tests in the right structure.
             # When the fields of RecentInfection and SubjectEligibility are finalized then this will be updated.
@@ -144,37 +143,25 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
             raise NoMatchingRecentInfectionException()
 
     @property
-    def subject_death_on_post_save(self):
-        """If survival status is dead, then create SubjectDeathReport on post save with a null death_cause and
-        last_date_known_alive fields. In UI force user to open and edit this record to enter death_cause and
-        last_date_known_alive among others."""
-        SubjectEligibilityLoss = get_model('bcvp_subject', 'SubjectEligibilityLoss')
-        SubjectDeathReport = get_model('bcvp_subject', 'SubjectDeathReport')
-        if self.survival_status == DEAD and not SubjectDeathReport.objects.filter(subject_eligibility=self).exists():
-            SubjectDeathReport.objects.create(subject_eligibility=self)
-        # Can a person really come back from the dead? maybe, consider witchcraft and religion.
-        elif self.survival_status == ALIVE and SubjectDeathReport.objects.filter(subject_eligibility=self).exists():
-            SubjectDeathReport.objects.filter(subject_eligibility=self).delete()
-            SubjectEligibilityLoss.objects.filter(subject_eligibility_id=self.id).delete()
-        # else all is good, do nothing.
-        else:
-            pass
-
-    @property
     def subject_refusal_on_post_save(self):
         """If willing_to_paticipate is NO, then create SubjectRefusalReport on post save with a null reason and
         refusal_date fields. In UI force user to open and edit this record to enter reason and
         refusal_date among others."""
         SubjectEligibilityLoss = get_model('bcvp_subject', 'SubjectEligibilityLoss')
         SubjectRefusalReport = get_model('bcvp_subject', 'SubjectRefusalReport')
-        refusal_report = SubjectRefusalReport.objects.filter(subject_eligibility=self)
-        if self.willing_to_paticipate == NO and not refusal_report.exists():
-            SubjectRefusalReport.objects.create(subject_eligibility=self)
-        # This is necessary for those that initially refuse and later change their mind to participate.
-        elif self.willing_to_paticipate == YES and refusal_report.exists():
-            SubjectRefusalReport.objects.filter(subject_eligibility=self).delete()
-            SubjectEligibilityLoss.objects.filter(subject_eligibility_id=self.id).delete()
-        # else all is good, do nothing.
+        if self.willing_to_paticipate == NO:
+            try:
+                SubjectRefusalReport.objects.get(subject_eligibility=self)
+            except:
+                SubjectRefusalReport.objects.create(subject_eligibility=self)
+        # This is necessary for those that initially refuse and later change their mind to participate
+        elif self.willing_to_paticipate == YES:
+            try:
+                SubjectRefusalReport.objects.get(subject_eligibility=self)
+                SubjectRefusalReport.objects.filter(subject_eligibility=self).delete()
+                SubjectEligibilityLoss.objects.filter(subject_eligibility_id=self.id).delete()
+            except:
+                pass
         else:
             pass
 

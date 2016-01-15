@@ -3,7 +3,6 @@ from .recent_partner_form import RecentPartnerForm
 from .residency_mobility_form import ResidencyMobilityForm
 from .sexual_behaviour_form import SexualBehaviourForm
 from .subject_consent_form import SubjectConsentForm
-from .subject_death_report_form import SubjectDeathReportForm
 from .subject_eligibility_form import SubjectEligibilityForm
 from .subject_locator_form import SubjectLocatorForm
 from .subject_off_study_form import SubjectOffStudyForm

@@ -9,7 +9,6 @@ from bcvp.bcvp_subject.models import (SubjectEligibility, RecentInfection, Subje
 from ..exceptions import NoMatchingRecentInfectionException
 from .base_test_case import BaseTestCase
 from .factories import SubjectEligibilityFactory
-from bcvp.bcvp_subject.models.subject_death_report import SubjectDeathReport
 
 
 class TestEligibility(BaseTestCase):
@@ -70,17 +69,6 @@ class TestEligibility(BaseTestCase):
         self.assertFalse(subject_eligibility.is_eligible)
         self.assertEqual(SubjectEligibilityLoss.objects.filter(subject_eligibility=subject_eligibility).count(), 1)
 
-    def test_creating_death_status(self):
-        """Asserts death record is created when eligibility is failed by DEATH, with death reason and
-        last date know alive being null, awaiting to be updated."""
-        options = {'survival_status': DEAD}
-        subject_eligibility = SubjectEligibilityFactory(**options)
-        self.assertFalse(subject_eligibility.is_eligible)
-        death_report = SubjectDeathReport.objects.filter(subject_eligibility=subject_eligibility)
-        self.assertTrue(death_report.exists())
-        self.assertIsNone(death_report[0].death_cause)
-        self.assertIsNone(death_report[0].last_date_known_alive)
-
     def test_creating_refusal_status(self):
         """Asserts refusal record is created when eligibility is failed by REFUSAL, with refusal reason and
         date being null, awaiting to be updated."""
@@ -101,5 +89,6 @@ class TestEligibility(BaseTestCase):
         self.assertTrue(refusal_report.exists())
         subject_eligibility.willing_to_paticipate = YES
         subject_eligibility.save()
+        self.assertTrue(subject_eligibility.is_eligible)
         refusal_report = SubjectRefusalReport.objects.filter(subject_eligibility=subject_eligibility)
         self.assertFalse(refusal_report.exists())
