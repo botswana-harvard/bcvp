@@ -6,7 +6,7 @@ from edc_base.modeladmin.admin import BaseModelAdmin
 from edc_export.actions import export_as_csv_action
 
 from ..forms import SubjectRefusalReportForm
-from ..models import SubjectRefusalReport
+from ..models import SubjectRefusalReport, SubjectEligibility
 
 
 class SubjectRefusalReportAdmin(BaseModelAdmin):
@@ -28,6 +28,12 @@ class SubjectRefusalReportAdmin(BaseModelAdmin):
                  'dob': 'subject_eligibility_registered_subject__dob',
                  }),
         )]
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "subject_eligibility":
+            if request.GET.get('subject_eligibility'):
+                kwargs["queryset"] = SubjectEligibility.objects.filter(id=request.GET.get('subject_eligibility'))
+        return super(SubjectRefusalReportAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 admin.site.register(SubjectRefusalReport, SubjectRefusalReportAdmin)
