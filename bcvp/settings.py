@@ -78,7 +78,6 @@ INSTALLED_APPS = [
     'edc_appointment',
     'edc_base',
     'edc_call_manager',
-    'edc_code_lists',
     'edc_configuration',
     'edc_consent',
     'edc_constants',
