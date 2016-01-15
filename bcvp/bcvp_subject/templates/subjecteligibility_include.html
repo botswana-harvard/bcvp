@@ -25,14 +25,13 @@
                 {% else %}
                     <td>{{ subject_eligibility.ineligibility }}</td>
                 {% endif %}
-                
                 <td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' subject_eligibility.pk %}?&next=section_url&section_name=subject">edit eligibility</A></td>
                 <td>{{subject_eligibility.subject_eligibility_loss.reason_ineligible|default:"-----" }}</td>
-                {{subject_eligibility.subject_refusal.reason}}
-                {% if subject_eligibility.subject_refusal.reason == None %}
-                    <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">add refusal report</A></td>
-                {% elif subject_eligibility.refusal_filled %}
-                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">edit refusal report</A></td>
+                {% if subject_eligibility.refusal_filled %}
+                    {% if subject_eligibility.subject_refusal.reason == None %}
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">add refusal report</A></td>
+                    {% endif %}
+                    <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">edit refusal report</A></td>
                 {% else %}
                     <td>-----</td>
                 {% endif %}
@@ -42,7 +41,6 @@
                 <td>{{subject_eligibility.created|date:"d M Y H:i"}}</td>
                 <td>{{subject_eligibility.hostname_created}}</td>
          </tr>
-
       {% endfor %}
       <tr><td colspan="9">{{ search_result.object_list.count }} subject eligibility records found.</td></tr>
       </tbody>
