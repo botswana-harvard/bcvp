@@ -67,7 +67,7 @@ class TestEligibility(BaseTestCase):
         subject_eligibility = SubjectEligibilityFactory(**self.data)
         self.assertTrue(subject_eligibility.is_eligible)
         registered_subject = RegisteredSubject.objects.get(pk=subject_eligibility.registered_subject.pk)
-        self.assertEquals(registered_subject.screening_datetime, subject_eligibility.report_datetime)
+        self.assertEquals(registered_subject.screening_datetime.date(), subject_eligibility.report_datetime.date())
         self.assertEquals(registered_subject.registration_status, SCREENED)
 
 #     def test_updates_registered_subject_on_edit(self):
