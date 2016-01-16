@@ -1,15 +1,14 @@
 import uuid
 
-from django.db import models
-from django.db.models import get_model
 from django.core.validators import RegexValidator
+from django.db import models
 
 from edc_base.audit_trail import AuditTrail
-from edc_base.model.models import BaseUuidModel
 from edc_base.encrypted_fields import EncryptedCharField, IdentityField, FirstnameField, LastnameField
+from edc_base.model.models import BaseUuidModel
 from edc_base.model.validators import datetime_not_before_study_start, datetime_not_future
 from edc_constants.choices import YES_NO, ALIVE_DEAD, DEAD
-from edc_constants.constants import NO, YES
+from edc_constants.constants import NO
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
 
@@ -27,11 +26,12 @@ class SubjectEligibilityManager(models.Manager):
 
 
 class SubjectEligibility (SyncModelMixin, BaseUuidModel):
-    """ A model completed by the user to test and capture the result of the pre-consent eligibility checks.
-
-    This model has no PII."""
+    """ A model completed by the user to test and capture the result
+    of the pre-consent eligibility checks."""
 
     registered_subject = models.OneToOneField(RegisteredSubject, null=True)
+
+    recent_infection = models.OneToOneField(RecentInfection, editable=False)
 
     eligibility_id = models.CharField(
         verbose_name="Eligibility Identifier",
@@ -46,9 +46,7 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
             datetime_not_future],
         help_text='Date and time of assessing eligibility')
 
-    first_name = FirstnameField(
-        null=True,
-    )
+    first_name = FirstnameField()
 
     last_name = LastnameField(
         verbose_name="Last name",
@@ -58,52 +56,45 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         validators=[RegexValidator(
             regex=r'^[A-Z]{2,3}$',
             message=('Ensure initials consist of letters '
-                     'only in upper case, no spaces.'))],
-        null=True)
+                     'only in upper case, no spaces.'))])
 
     gender = models.CharField(
         verbose_name="Gender",
-        max_length=1,
-        null=True,
-        blank=False)
+        max_length=1)
 
     dob = models.DateField(
         verbose_name="Date of birth",
-        null=True,
-        blank=False,
-        help_text="Format is YYYY-MM-DD")
+        help_text="Format is YYYY-MM-DD",
+        null=True)
 
     age_in_years = models.IntegerField(
-        verbose_name='What is the age of the participant?')
+        verbose_name='Age')
 
-    identity = IdentityField(
-        null=True,
-        blank=True)
+    identity = IdentityField()
 
     survival_status = models.CharField(
-        verbose_name="what is the survival status of the participant",
+        verbose_name="Survival status",
         max_length=5,
         choices=ALIVE_DEAD)
 
-    willing_to_paticipate = models.CharField(
-        verbose_name="is the subject willing to participate in the survey?",
+    willing_to_participate = models.CharField(
+        verbose_name="Is the subject willing to participate in the survey?",
         max_length=3,
         choices=YES_NO)
 
     has_omang = models.CharField(
-        verbose_name="Do you have an OMANG?",
+        verbose_name="Is the subject\'s OMANG available to verify identity?",
         max_length=3,
         choices=YES_NO)
 
-    ineligibility = models.TextField(
+    is_eligible = models.BooleanField(
+        default=False,
+        editable=False)
+
+    reason_ineligible = models.TextField(
         verbose_name="Reason not eligible",
         max_length=150,
         null=True,
-        editable=False)
-
-    # NullBoolean NULL => Zero State, False => Failed Eligibility, True => Passed Eligibility.
-    is_eligible = models.NullBooleanField(
-        default=False,
         editable=False)
 
     # is updated via signal once subject is consented
@@ -111,13 +102,12 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         default=False,
         editable=False)
 
-    # updated by signal on saving consent, is determined by participant citizenship
-    has_passed_consent = models.BooleanField(
+    is_refused = models.BooleanField(
         default=False,
         editable=False)
 
-    # updated by signal on saving refusal report
-    refusal_filled = models.BooleanField(
+    # updated by signal on saving consent, is determined by participant citizenship
+    has_passed_consent = models.BooleanField(
         default=False,
         editable=False)
 
@@ -128,24 +118,24 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     def save(self, *args, **kwargs):
         if not self.id:
             self.eligibility_id = str(uuid.uuid4())
-        self.is_eligible, error_message = self.check_eligibility()
-        self.ineligibility = error_message  # error_message not None if is_eligible is False
+            self.recent_infection = self.get_recent_infection_or_raise()
+        self.is_eligible, self.reason_ineligible = self.check_eligibility()
         super(SubjectEligibility, self).save(*args, **kwargs)
 
     def check_eligibility(self):
-        """Returns a tuple (True, None) if subject is eligible otherwise (False, error_messsage) where
+        """Return a tuple (True, None) if subject is eligible otherwise (False, error_messsage) where
         error message is the reason for eligibility test failed."""
         error_message = []
         if self.survival_status == DEAD:
-            error_message.append('Subject is dead')
-        if self.willing_to_paticipate == NO:
-            error_message.append('Subject is has refused participation')
+            error_message.append('deceased')
+        if self.willing_to_participate == NO:
+            error_message.append('refused participation')
         if self.age_in_years < MIN_AGE_OF_CONSENT:
-            error_message.append('Subject is under {}'.format(MIN_AGE_OF_CONSENT))
+            error_message.append('under age {}'.format(MIN_AGE_OF_CONSENT))
         if self.age_in_years > MAX_AGE_OF_CONSENT:
-            error_message.append('Subject is too old (>{})'.format(MAX_AGE_OF_CONSENT))
+            error_message.append('over age {}'.format(MAX_AGE_OF_CONSENT))
         if self.has_omang == NO:
-            error_message.append('Not a citizen')
+            error_message.append('non-citizen')
         is_eligible = False if error_message else True
         return (is_eligible, ','.join(error_message))
 
@@ -155,56 +145,14 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     def natural_key(self):
         return (self.eligibility_id, )
 
-    @property
-    def subject_eligibility_loss(self):
-        SubjectEligibilityLoss = get_model('bcvp_subject', 'SubjectEligibilityLoss')
+    def get_recent_infection_or_raise(self, exception_cls=None):
+        """Return an instance of RecentInfection or raise."""
+        exception_cls = exception_cls or NoMatchingRecentInfectionException
         try:
-            subject_eligibility_loss = SubjectEligibilityLoss.objects.get(
-                subject_eligibility_id=self.id)
-        except SubjectEligibilityLoss.DoesNotExist:
-            subject_eligibility_loss = None
-        return subject_eligibility_loss
-
-    @property
-    def recent_infection_record(self):
-        """Return a RecentInfection record that matches this eligibility record"""
-        try:
-            # Note that using age_in_years is a temporary to be able to get the tests in the right structure.
-            # When the fields of RecentInfection and SubjectEligibility are finalized then this will be updated.
-            return RecentInfection.objects.get(dob=self.dob, initials=self.initials, identity=self.identity)
-        except RecentInfection.DoesNotExist:
-            raise NoMatchingRecentInfectionException()
-
-    @property
-    def subject_refusal_on_post_save(self):
-        """If willing_to_paticipate is NO, then create SubjectRefusalReport on post save with a null reason and
-        refusal_date fields. In UI force user to open and edit this record to enter reason and
-        refusal_date among others."""
-        SubjectEligibilityLoss = get_model('bcvp_subject', 'SubjectEligibilityLoss')
-        SubjectRefusalReport = get_model('bcvp_subject', 'SubjectRefusalReport')
-        if self.willing_to_paticipate == NO:
-            try:
-                SubjectRefusalReport.objects.get(subject_eligibility=self)
-            except:
-                SubjectRefusalReport.objects.create(subject_eligibility=self)
-        # This is necessary for those that initially refuse and later change their mind to participate
-        elif self.willing_to_paticipate == YES:
-            try:
-                SubjectRefusalReport.objects.get(subject_eligibility=self)
-                SubjectRefusalReport.objects.filter(subject_eligibility=self).delete()
-                SubjectEligibilityLoss.objects.filter(subject_eligibility_id=self.id).delete()
-            except:
-                pass
-        else:
-            pass
-
-    @property
-    def subject_refusal(self):
-        SubjectRefusalReport = get_model('bcvp_subject', 'SubjectRefusalReport')
-        try:
-            return SubjectRefusalReport.objects.get(subject_eligibility=self)
-        except SubjectRefusalReport.DoesNotExist:
-            return None
+            return RecentInfection.objects.get(
+                dob=self.dob, initials=self.initials, identity=self.identity)
+        except RecentInfection.DoesNotExist as e:
+            raise exception_cls(str(e))
 
     class Meta:
         app_label = 'bcvp_subject'

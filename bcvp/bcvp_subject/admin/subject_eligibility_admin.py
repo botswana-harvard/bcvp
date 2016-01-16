@@ -18,11 +18,11 @@ class SubjectEligibilityAdmin(BaseModelAdmin):
               'age_in_years',
               'has_omang',
               'survival_status',
-              'willing_to_paticipate')
+              'willing_to_participate')
     radio_fields = {
         'has_omang': admin.VERTICAL,
         'survival_status': admin.VERTICAL,
-        'willing_to_paticipate': admin.VERTICAL,
+        'willing_to_participate': admin.VERTICAL,
     }
 
     readonly_fields = ('eligibility_id',)

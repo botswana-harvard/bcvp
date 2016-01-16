@@ -11,4 +11,4 @@ from .subject_eligibility_loss import SubjectEligibilityLoss
 from .subject_locator import SubjectLocator
 from .subject_off_study import SubjectOffStudy
 from .subject_visit import SubjectVisit
-from .subject_refusal_report import SubjectRefusalReport
+from .subject_refusal import SubjectRefusal

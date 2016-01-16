@@ -10,16 +10,17 @@ from edc_constants.choices import WHYNOPARTICIPATE_CHOICE
 from .subject_eligibility import SubjectEligibility
 
 
-class SubjectRefusalReportManager(models.Manager):
+class SubjectRefusalManager(models.Manager):
 
     def get_by_natural_key(self, eligibility_id):
         subject_eligibility = SubjectEligibility.objects.get_by_natural_key(eligibility_id=eligibility_id)
         return self.get(subject_eligibility=subject_eligibility)
 
 
-class SubjectRefusalReport(SyncModelMixin, BaseUuidModel):
+class SubjectRefusal(SyncModelMixin, BaseUuidModel):
     """A model completed by the user that captures reasons for a
-    potentially eligible participant refusing participating in BCVP."""
+    potentially eligible participant refusing to participate."""
+
     subject_eligibility = models.OneToOneField(SubjectEligibility)
 
     refusal_date = models.DateField(
@@ -41,9 +42,9 @@ class SubjectRefusalReport(SyncModelMixin, BaseUuidModel):
 
     reason_other = OtherCharField()
 
-    history = AuditTrail()
+    objects = SubjectRefusalManager()
 
-    objects = SubjectRefusalReportManager()
+    history = AuditTrail()
 
     def natural_key(self):
         return self.subject_eligibility.natural_key()
@@ -53,7 +54,7 @@ class SubjectRefusalReport(SyncModelMixin, BaseUuidModel):
         return self.report_datetime
 
     def save(self, *args, **kwargs):
-        super(SubjectRefusalReport, self).save(*args, **kwargs)
+        super(SubjectRefusal, self).save(*args, **kwargs)
 
     class Meta:
         app_label = 'bcvp_subject'

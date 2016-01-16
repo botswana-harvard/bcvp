@@ -16,9 +16,7 @@ class ResidencyMobility(SubjectCrfModel):
     length_residence = models.CharField(
         verbose_name='How long have you lived in this community?',
         max_length=25,
-        choices=LENGTHRESIDENCE_CHOICE,
-        help_text="",
-    )
+        choices=LENGTHRESIDENCE_CHOICE)
 
     permanent_resident = models.CharField(
         verbose_name="In the past 12 months, have you typically spent 14 or"
@@ -29,15 +27,12 @@ class ResidencyMobility(SubjectCrfModel):
                    "community in the past 12 months, then "
                    "since moving in has the participant typically "
                    "spent more than 14 nights per month in this community. "
-                   "If 'NO (or don't want to answer)' STOP. Participant cannot be enrolled."),
-    )
+                   "If 'NO (or don't want to answer)' STOP. Participant cannot be enrolled."))
 
     intend_residency = models.CharField(
         verbose_name="Do you intend to move out of the community in the next 12 months?",
         max_length=25,
-        choices=YES_NO,
-        help_text="",
-    )
+        choices=YES_NO)
 
     nights_away = models.CharField(
         verbose_name=(
@@ -45,9 +40,7 @@ class ResidencyMobility(SubjectCrfModel):
             " from this community, including visits to cattle post and lands?"
             "[If you don't know exactly, give your best guess]"),
         max_length=35,
-        choices=NIGHTSAWAY_CHOICE,
-        help_text="",
-    )
+        choices=NIGHTSAWAY_CHOICE)
 
     cattle_postlands = models.CharField(
         verbose_name=(
@@ -55,17 +48,13 @@ class ResidencyMobility(SubjectCrfModel):
             "where were you primarily staying?"),
         max_length=25,
         choices=CATTLEPOSTLANDS_CHOICE,
-        default=NOT_APPLICABLE,
-        help_text="",
-    )
+        default=NOT_APPLICABLE)
 
     cattle_postlands_other = models.CharField(
         verbose_name="Give the name of the community",
         max_length=65,
         null=True,
-        blank=True,
-        help_text="",
-    )
+        blank=True)
 
     history = AuditTrail()
 

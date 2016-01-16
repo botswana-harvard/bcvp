@@ -1,9 +1,9 @@
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
 from edc_consent.models import RequiresConsentMixin
+from edc_meta_data.models import CrfMetaDataMixin
 from edc_offstudy.models import OffStudyMixin
 from edc_sync.models import SyncModelMixin
-from edc_meta_data.models import CrfMetaDataMixin
 from edc_visit_tracking.constants import VISIT_REASON_NO_FOLLOW_UP_CHOICES
 from edc_visit_tracking.models import VisitModelMixin, PreviousVisitMixin, CaretakerFieldsMixin
 
@@ -22,11 +22,6 @@ class SubjectVisit(OffStudyMixin, SyncModelMixin, PreviousVisitMixin, CrfMetaDat
     off_study_model = ('bcvp_subject', 'SubjectOffStudy')
 
     history = AuditTrail()
-
-    def __unicode__(self):
-        return '{} {} {}'.format(self.appointment.registered_subject.subject_identifier,
-                                 self.appointment.registered_subject.first_name,
-                                 self.appointment.visit_definition.code)
 
     def save(self, *args, **kwargs):
         self.subject_identifier = self.appointment.registered_subject.subject_identifier

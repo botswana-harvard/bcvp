@@ -5,13 +5,13 @@ from django.contrib import admin
 from edc_base.modeladmin.admin import BaseModelAdmin
 from edc_export.actions import export_as_csv_action
 
-from ..forms import SubjectRefusalReportForm
-from ..models import SubjectRefusalReport, SubjectEligibility
+from ..forms import SubjectRefusalForm
+from ..models import SubjectRefusal, SubjectEligibility
 
 
-class SubjectRefusalReportAdmin(BaseModelAdmin):
+class SubjectRefusalAdmin(BaseModelAdmin):
 
-    form = SubjectRefusalReportForm
+    form = SubjectRefusalForm
 
     radio_fields = {'reason': admin.VERTICAL}
     list_filter = ('refusal_date', 'reason')
@@ -33,7 +33,7 @@ class SubjectRefusalReportAdmin(BaseModelAdmin):
         if db_field.name == "subject_eligibility":
             if request.GET.get('subject_eligibility'):
                 kwargs["queryset"] = SubjectEligibility.objects.filter(id=request.GET.get('subject_eligibility'))
-        return super(SubjectRefusalReportAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        return super(SubjectRefusalAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-admin.site.register(SubjectRefusalReport, SubjectRefusalReportAdmin)
+admin.site.register(SubjectRefusal, SubjectRefusalAdmin)

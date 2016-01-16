@@ -38,6 +38,8 @@
     <ul>
     Go to <A href="{% url 'admin:app_list' app_label='bcvp_subject' %}">All Subject Forms</A> or select one:
     <ul>
+    <li><A href="{% url 'admin:bcvp_subject_recentinfection_changelist' %}">Recent Infections</A>
+    <li><A href="{% url 'admin:bcvp_subject_subjecteligibility_changelist' %}">Eligibility</A>
     <li><A href="{% url 'admin:bcvp_subject_subjectconsent_changelist' %}">Subject Consents</A>
     <li><A href="{% url 'admin:bcvp_subject_subjectoffstudy_changelist' %}">Subject Off Study</A>
     </ul>

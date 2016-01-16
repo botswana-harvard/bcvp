@@ -9,7 +9,5 @@ class BaseTestCase(TestCase):
     def setUp(self):
         load_edc()
         self.study_site = '10'
-        RecentInfectionFactory()
-        RecentInfectionFactory()
-        RecentInfectionFactory()
-        RecentInfectionFactory()
+        for _ in range(0, 5):
+            RecentInfectionFactory()

@@ -3,6 +3,7 @@ import django_databrowse
 from django.contrib import admin
 from django.db.models import get_models
 
+from edc_base.utils import edc_base_startup
 from edc_call_manager.caller_site import site_model_callers
 from edc_dashboard.section import site_sections
 from edc_data_manager.data_manager import data_manager
@@ -15,6 +16,7 @@ from bcvp.app_configuration import AppConfiguration
 
 
 def load_edc():
+    edc_base_startup()
     site_lab_profiles.autodiscover()
     AppConfiguration(lab_profiles=site_lab_profiles).prepare()
     site_visit_schedules.autodiscover()

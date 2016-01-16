@@ -20,8 +20,7 @@ class HivCareAdherence(SubjectCrfModel):
         null=True,
         blank=True,
         help_text=("Note: If participant does not want to answer, leave blank. "
-                   "If participant is unable to estimate date, leave blank."),
-    )
+                   "If participant is unable to estimate date, leave blank."))
 
     medical_care = models.CharField(
         verbose_name="Have you ever received HIV-related medical or clinical"
@@ -31,8 +30,7 @@ class HivCareAdherence(SubjectCrfModel):
         choices=YES_NO_DWTA,
         null=True,
         blank=True,
-        help_text="if 'YES', answer HIV medical care section",
-    )
+        help_text="if 'YES', answer HIV medical care section")
 
     no_medical_care = models.CharField(
         verbose_name="What is the main reason you have not received HIV-related"
@@ -40,9 +38,8 @@ class HivCareAdherence(SubjectCrfModel):
         max_length=70,
         null=True,
         blank=True,
-        choices=NO_MEDICAL_CARE,
-        help_text="",
-    )
+        choices=NO_MEDICAL_CARE)
+
     no_medical_care_other = OtherCharField()
 
     ever_recommended_arv = models.CharField(
@@ -53,9 +50,7 @@ class HivCareAdherence(SubjectCrfModel):
         max_length=25,
         choices=YES_NO_DWTA,
         null=True,
-        blank=True,
-        help_text="",
-    )
+        blank=True)
 
     ever_taken_arv = models.CharField(
         verbose_name="Have you ever taken any antiretroviral therapy (ARVs) for your HIV infection?"
@@ -64,18 +59,15 @@ class HivCareAdherence(SubjectCrfModel):
         max_length=25,
         choices=YES_NO_DWTA,
         null=True,
-        blank=False,
-        help_text="",
-    )
+        blank=False)
 
     why_no_arv = models.CharField(
         verbose_name="What was the main reason why you have not started ARVs?",
         max_length=75,
         null=True,
         blank=True,
-        choices=WHYNOARV_CHOICE,
-        help_text="",
-    )
+        choices=WHYNOARV_CHOICE)
+
     why_no_arv_other = OtherCharField()
 
     first_arv = models.DateField(
@@ -84,8 +76,7 @@ class HivCareAdherence(SubjectCrfModel):
         null=True,
         blank=True,
         help_text=("Note: If participant does not want to answer,leave blank.  "
-                   "If participant is unable to estimate date, leave blank."),
-    )
+                   "If participant is unable to estimate date, leave blank."))
 
     on_arv = models.CharField(
         verbose_name="Are you currently taking antiretroviral therapy (ARVs)?",
@@ -93,42 +84,33 @@ class HivCareAdherence(SubjectCrfModel):
         choices=YES_NO_DWTA,
         null=True,
         blank=False,
-        help_text="If yes, need to answer next two questions.",
-    )
+        help_text="If yes, need to answer next two questions.")
 
     clinic_receiving_from = models.CharField(
         verbose_name='Which clinic facility are you already receiving therapy from?',
         default=None,
         null=True,
         blank=True,
-        max_length=50,
-        help_text=""
-    )
+        max_length=50)
 
     next_appointment_date = models.DateField(
         verbose_name="When is your next appointment at this facility?",
         default=None,
         null=True,
-        blank=True,
-        help_text=""
-    )
+        blank=True)
 
     arv_stop_date = models.DateField(
         verbose_name="When did you stop taking ARV\'s?",
         validators=[date_not_future],  # Q15
         null=True,
-        blank=True,
-        help_text="",
-    )
+        blank=True)
 
     arv_stop = models.CharField(
         verbose_name="What was the main reason why you stopped taking ARVs?",
         max_length=80,
         choices=WHYARVSTOP_CHOICE,
         null=True,
-        blank=True,
-        help_text="",
-    )
+        blank=True)
 
     arv_stop_other = OtherCharField()
 
@@ -138,9 +120,7 @@ class HivCareAdherence(SubjectCrfModel):
         max_length=25,
         choices=ADHERENCE4DAY_CHOICE,
         null=True,
-        blank=True,
-        help_text="",
-    )
+        blank=True)
 
     adherence_4_wk = models.CharField(
         verbose_name="Thinking about the past 4 weeks, on average, how would you rate your "
@@ -148,17 +128,14 @@ class HivCareAdherence(SubjectCrfModel):
         max_length=25,
         null=True,
         blank=True,
-        choices=ADHERENCE4WK_CHOICE,
-        help_text="",
-    )
+        choices=ADHERENCE4WK_CHOICE)
 
     arv_evidence = models.CharField(
         verbose_name="Is there evidence [OPD card, tablets, masa number] that the participant is on therapy?",
         choices=YES_NO,
         null=True,
         blank=True,
-        max_length=3,
-    )
+        max_length=3)
 
     history = AuditTrail()
 

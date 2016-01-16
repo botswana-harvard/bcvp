@@ -6,7 +6,7 @@
       <table cellspacing="0" id="result_list">
         <thead><tr>
         <th>Dashboard</th>
-        <th>Eligibility</th>
+        <th>Eligible</th>
         <th>Loss</th>
         <th>Refusal</th>
         <th>Registration Date/Time</th>
@@ -23,16 +23,16 @@
                 {% elif subject_eligibility.is_eligible %}
                     <td><A href="{% url 'admin:bcvp_subject_subjectconsent_add' %}?registered_subject={{subject_eligibility.registered_subject.pk}}&next=section_url&section_name=subject">add subject consent</A></td>
                 {% else %}
-                    <td>{{ subject_eligibility.ineligibility }}</td>
+                    <td>{{ subject_eligibility.reason_ineligible }}</td>
                 {% endif %}
                 <td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' subject_eligibility.pk %}?&next=section_url&section_name=subject">edit eligibility</A></td>
-                <td>{{subject_eligibility.subject_eligibility_loss.reason_ineligible|default:"-----" }}</td>
-                {{subject_eligibility.refusal_filled}}
-                {% if subject_eligibility.refusal_filled %}
-                    {% if subject_eligibility.subject_refusal.reason == None %}
-                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">add refusal report</A></td>
+                <td>{% if subject_eligibility.is_eligible %}YES{% else %}no{% endif %}</td>
+                {{subject_eligibility.is_refused}}
+                {% if subject_eligibility.is_refused %}
+                    {% if subject_refusal %}
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_refusal.pk %}?&next=section_url&section_name=subject">Edit refusal report</A></td>
                     {% else %}
-                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">edit refusal report</A></td>
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_add' %}?&next=section_url&section_name=subject">Add refusal report</A></td>
                     {% endif %}
                 {% else %}
                     <td>-----</td>

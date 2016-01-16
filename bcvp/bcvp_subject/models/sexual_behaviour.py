@@ -17,9 +17,7 @@ class SexualBehaviour(SubjectCrfModel):
         verbose_name="In your lifetime, have you ever had sex with anyone"
                      " (including your spouse, friends, or someone you have just met)?",
         max_length=25,
-        choices=YES_NO_DWTA,
-        help_text="",
-    )
+        choices=YES_NO_DWTA)
 
     lifetime_sex_partners = models.IntegerField(
         verbose_name="In your lifetime, how many different people have you had"
@@ -29,9 +27,7 @@ class SexualBehaviour(SubjectCrfModel):
                      "number, please give a best guess]",
         max_length=3,
         null=True,
-        blank=True,
-        help_text="",
-    )
+        blank=True)
 
     last_year_partners = models.IntegerField(
         verbose_name="In the past 12 months, how many different people have you had"
@@ -51,9 +47,7 @@ class SexualBehaviour(SubjectCrfModel):
         max_length=25,
         null=True,
         blank=True,
-        choices=YES_NO_DWTA,
-        help_text="",
-    )
+        choices=YES_NO_DWTA)
 
     first_sex = models.IntegerField(
         verbose_name="How old were you when you had sex for the first time?"
@@ -62,8 +56,7 @@ class SexualBehaviour(SubjectCrfModel):
         null=True,
         blank=True,
         validators=[MinValueValidator(10), MaxValueValidator(64)],
-        help_text="Note:leave blank if participant does not want to respond.",
-    )
+        help_text="Note:leave blank if participant does not want to respond.")
 
     condom = models.CharField(
         verbose_name="During the last [most recent] time you had sex, did"
@@ -71,9 +64,7 @@ class SexualBehaviour(SubjectCrfModel):
         max_length=25,
         null=True,
         blank=True,
-        choices=YES_NO_DWTA,
-        help_text="",
-    )
+        choices=YES_NO_DWTA)
 
     alcohol_sex = models.CharField(
         verbose_name="During the last [most recent] time you had sex, were"
@@ -81,9 +72,7 @@ class SexualBehaviour(SubjectCrfModel):
         max_length=25,
         null=True,
         blank=True,
-        choices=ALCOHOL_SEX,
-        help_text="",
-    )
+        choices=ALCOHOL_SEX)
 
     history = AuditTrail()
 

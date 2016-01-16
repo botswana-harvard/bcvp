@@ -15,16 +15,14 @@ class RecentPartner(SubjectCrfModel):
     rel_type = models.CharField(
         verbose_name="What type of relationship do you have with this person?",
         max_length=37,
-        choices=RELATIONSHIP_TYPE,
-        help_text="")
+        choices=RELATIONSHIP_TYPE)
 
     rel_type_other = OtherCharField()
 
     partner_residency = models.CharField(
         verbose_name="To the best of your knowledge, where does you main sexual partner live?",
         max_length=25,
-        choices=MAIN_PARTNER_RESIDENCY,
-        help_text="")
+        choices=MAIN_PARTNER_RESIDENCY)
 
     partner_age = models.IntegerField(
         verbose_name="How old is this sexual partner?",
@@ -34,8 +32,7 @@ class RecentPartner(SubjectCrfModel):
     partner_gender = models.CharField(
         verbose_name="Is this partner male or female? ",
         max_length=6,
-        choices=GENDER,
-        help_text="")
+        choices=GENDER)
 
     last_sex_contact = models.IntegerField(
         verbose_name="When was the last (most recent) time you had sex with"
@@ -59,15 +56,13 @@ class RecentPartner(SubjectCrfModel):
     regular_sex = models.IntegerField(
         verbose_name="During the last 3 months (of your relationship if it has ended) how"
                      " many times a month (on average) did you have sex?",
-        max_length=2,
-        help_text="")
+        max_length=2)
 
     having_sex = models.CharField(
         verbose_name="Are you still having sex with this person? ",
         max_length=25,
         choices=YES_NO_REFUSED,
-        null=True,
-        help_text="")
+        null=True)
 
     having_sex_reg = models.CharField(
         verbose_name="Are you still having sex with this person? ",
@@ -78,8 +73,7 @@ class RecentPartner(SubjectCrfModel):
     alcohol_before_sex = models.CharField(
         verbose_name="Last time you had sex with this partner, did you drink alcohol before sex? ",
         max_length=20,
-        choices=YES_NO_REFUSED,
-        help_text="")
+        choices=YES_NO_REFUSED)
 
     partner_status = models.CharField(
         verbose_name="Have you learned this partner's HIV status? ",
@@ -92,16 +86,14 @@ class RecentPartner(SubjectCrfModel):
         max_length=15,
         null=True,
         blank=True,
-        choices=YES_NO_DONT_KNOW,
-        help_text="")
+        choices=YES_NO_DONT_KNOW)
 
     status_disclosure = models.CharField(
         verbose_name="Have you disclosed your HIV status to this partner? ",
         max_length=20,
         null=True,
         blank=True,
-        choices=YES_NO_REFUSED,
-        help_text="")
+        choices=YES_NO_REFUSED)
 
     multiple_partners = models.CharField(
         verbose_name="To the best of your knowledge, did he/she ever have other"
@@ -109,8 +101,7 @@ class RecentPartner(SubjectCrfModel):
         max_length=15,
         null=True,
         blank=True,
-        choices=YES_NO_DONT_KNOW,
-        help_text="")
+        choices=YES_NO_DONT_KNOW)
 
     intercourse_type = models.CharField(
         verbose_name="Can you tell me what type of sex you had with this sex partner?  ",

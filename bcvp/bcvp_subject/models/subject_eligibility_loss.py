@@ -18,11 +18,6 @@ class SubjectEligibilityLossManager(models.Manager):
 class SubjectEligibilityLoss(SyncModelMixin, BaseUuidModel):
     """ A model triggered and completed by system when a subject is in-eligible. """
 
-    # Tying this to a relational of SubjectEligibility instead of RegisteredSubject means that a SubjectEligibilityLoss
-    # can only ever be triggered to exist if a SubjectEligibility exists. Implications are that no loss can be created
-    # from the call manager. Even if a participant is discovered to be dead from a phone call, the RA still
-    # needs to fill the SubjectEligibility for that participant, of which a survival_status=DEAD will lead to the
-    # creation of a loss record. The same applies for a participant that refuses.
     subject_eligibility = models.OneToOneField(SubjectEligibility)
 
     report_datetime = models.DateTimeField(
@@ -33,19 +28,21 @@ class SubjectEligibilityLoss(SyncModelMixin, BaseUuidModel):
     reason_ineligible = models.TextField(
         verbose_name='Reason not eligible',
         max_length=500,
-        help_text='Gets reasons from Subject Eligibility.ineligibility')
+        help_text='Gets reasons from Subject Eligibility.reason_ineligible')
 
     objects = SubjectEligibilityLossManager()
 
     history = AuditTrail()
 
+    def __unicode__(self):
+        return self.get_subject_identifier()
+
     def natural_key(self):
         return self.subject_eligibility.natural_key()
     natural_key.dependencies = ['bcvp_subject.subjecteligibility']
 
-    def ineligibility(self):
-        return self.reason_ineligible or []
-    reason_ineligible.allow_tags = True
+    def get_subject_identifier(self):
+        return self.subject_eligibility.recent_infection.subject_identifier
 
     class Meta:
         app_label = 'bcvp_subject'
