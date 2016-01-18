@@ -36,8 +36,7 @@ class SubjectConsent(BaseConsent, AppointmentMixin, SyncModelMixin, OffStudyMixi
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.subject_identifier = SubjectIdentifier(
-                site_code=self.study_site).get_identifier()
+            self.subject_identifier = self.registered_subject.subject_identifier
         super(SubjectConsent, self).save(*args, **kwargs)
 
     def get_registration_datetime(self):
