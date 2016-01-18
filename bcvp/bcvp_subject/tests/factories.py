@@ -3,8 +3,11 @@ from datetime import date
 from django.utils import timezone
 
 from edc_constants.constants import YES, NO
-from bcvp.bcvp_subject.models import SubjectEligibility, RecentInfection, SubjectLocator
+from bcvp.bcvp_subject.models import (SubjectEligibility, RecentInfection, SubjectLocator, SubjectConsent,
+                                      SubjectVisit)
 from edc_constants.choices import ALIVE
+from edc_consent.tests.factories import TestConsentModelFactory
+from edc_visit_tracking.tests.factories import TestVisitFactory
 
 
 class SubjectEligibilityFactory(factory.DjangoModelFactory):
@@ -46,3 +49,15 @@ class SubjectLocatorFactory(factory.DjangoModelFactory):
     subject_cell = factory.Sequence(lambda n: '72111{0}'.format(n))
     may_call_work = NO
     may_contact_someone = NO
+
+
+class SubjectConsentFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = SubjectConsent
+
+
+class SubjectVisitFactory(TestVisitFactory):
+
+    class Meta:
+        model = SubjectVisit

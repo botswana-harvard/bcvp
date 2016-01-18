@@ -101,6 +101,14 @@ class RecentInfection(BaseUuidModel):
     def report_datetime(self):
         return self.drawn_datetime
 
+    @property
+    def eligibility_matching_dict(self):
+        eligibility_matching_attr = {}
+        eligibility_matching_attr['dob'] = self.dob
+        eligibility_matching_attr['initials'] = self.initials
+        eligibility_matching_attr['identity'] = self.identity
+        return eligibility_matching_attr
+
     class Meta:
         app_label = 'bcvp_subject'
         verbose_name = 'Recent Infection'
