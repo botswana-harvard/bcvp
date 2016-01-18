@@ -1,2 +1,0 @@
-To generate/update the fixtures:
-	python manage.py dumpdata --indent=2 edc_registration.registeredsubject bcvp_subject.recentinfection bcvp_subject.subjectlocator > bcvp/fixtures/recent_infections.json
