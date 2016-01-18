@@ -12,9 +12,9 @@ class RecentInfectionAdmin(BaseSubjectModelAdmin):
         'initials',
         'born',
         'specimen_identifier',
-        'cell',
-        'cell_alt')
+        'subject_cell',
+        'subject_cell_alt')
     search_fields = (
         'subject_identifier', 'identity', 'initials',
-        'specimen_identifier', 'contact_cell_number', 'alt_contact_cell_number')
+        'specimen_identifier', 'subject_cell', 'subject_cell_alt')
 admin.site.register(RecentInfection, RecentInfectionAdmin)

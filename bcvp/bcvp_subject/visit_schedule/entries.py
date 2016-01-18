@@ -3,7 +3,6 @@ from edc_constants.constants import NOT_REQUIRED, REQUIRED, ADDITIONAL, NOT_ADDI
 
 
 subject_crf_entries = (
-    CrfTuple(10L, u'bcvp_subject', u'subjectlocator', REQUIRED, NOT_ADDITIONAL),
     CrfTuple(100L, u'bcvp_subject', u'residencymobility', REQUIRED, NOT_ADDITIONAL),
     CrfTuple(110L, u'bcvp_subject', u'hivcareadherence', REQUIRED, NOT_ADDITIONAL),
     CrfTuple(120L, u'bcvp_subject', u'sexualbehaviour', REQUIRED, NOT_ADDITIONAL),
@@ -13,5 +12,5 @@ subject_crf_entries = (
 subject_requisition_entries = (
     RequisitionPanelTuple(
         10L, u'bcvp_lab', u'subjectrequisition',
-        'Research Blood Draw', 'TEST', 'WB', NOT_REQUIRED, ADDITIONAL),
+        'Research Blood Draw', 'TEST', 'WB', REQUIRED, NOT_ADDITIONAL),
 )

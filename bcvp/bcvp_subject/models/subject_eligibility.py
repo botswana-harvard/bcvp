@@ -1,5 +1,6 @@
 import uuid
 
+from dateutil.relativedelta import relativedelta
 from django.core.validators import RegexValidator
 from django.db import models
 
@@ -17,6 +18,7 @@ from bcvp.bcvp.constants import MIN_AGE_OF_CONSENT, MAX_AGE_OF_CONSENT
 from ..exceptions import NoMatchingRecentInfectionException
 
 from .recent_infection import RecentInfection
+from datetime import timedelta
 
 
 class SubjectEligibilityManager(models.Manager):
@@ -116,6 +118,7 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     history = AuditTrail()
 
     def save(self, *args, **kwargs):
+        self.age_in_years=relativedelta(self.report_datetime.date(), self.dob).years
         if not self.id:
             self.eligibility_id = str(uuid.uuid4())
             self.recent_infection = self.get_recent_infection_or_raise()

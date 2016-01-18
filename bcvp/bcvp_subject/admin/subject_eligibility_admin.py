@@ -15,8 +15,13 @@ class SubjectEligibilityAdmin(BaseModelAdmin):
 
     fields = ('eligibility_id',
               'report_datetime',
-              'age_in_years',
+              'first_name',
+              'last_name',
+              'initials',
+              'dob',
               'has_omang',
+              'identity',
+              'gender',
               'survival_status',
               'willing_to_participate')
     radio_fields = {
