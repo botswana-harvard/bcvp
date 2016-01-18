@@ -36,6 +36,8 @@ class RecentInfection(BaseUuidModel):
 
     test_date = models.DateTimeField(
         verbose_name='Date / Time test was performed',
+        blank=True,
+        null=True,
         help_text=(
             'If not drawn, leave blank. Same as date and time of finger prick in case on DBS.'))
 
@@ -46,12 +48,16 @@ class RecentInfection(BaseUuidModel):
 
     drawn_datetime = models.DateTimeField(
         verbose_name='Date / Time Specimen Drawn',
+        blank=True,
+        null=True,
         help_text=(
             'If not drawn, leave blank. Same as date and time of finger prick in case on DBS.'))
 
     result = models.CharField(
         verbose_name='Result',
-        max_length=50)
+        max_length=50,
+        blank=True,
+        null=True)
 
     gps_lon = EncryptedDecimalField(
         verbose_name='longitude',

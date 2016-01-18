@@ -10,6 +10,7 @@ from edc_offstudy.models import OffStudyMixin
 from edc_sync.models import SyncModelMixin
 from edc_visit_tracking.models import CrfModelMixin
 
+from .subject_off_study import SubjectOffStudy
 from .subject_visit import SubjectVisit
 
 
@@ -17,7 +18,9 @@ class SubjectLocator(LocatorMixin, CrfModelMixin, SyncModelMixin, OffStudyMixin,
 
     """ A model completed by the user to capture locator information. """
 
-    off_study_model = ('bcvp_subject', 'SubjectOffStudy')
+    off_study_model = SubjectOffStudy
+
+    visit_model_attr = 'subject_visit'
 
     registered_subject = models.OneToOneField(RegisteredSubject, null=True)
 

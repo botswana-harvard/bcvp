@@ -19,6 +19,10 @@ class SubjectOffStudy(OffStudyModelMixin, CrfModelMixin, SyncModelMixin,
 
     consent_model = SubjectConsent
 
+    visit_model_attr = 'subject_visit'
+
+    visit_model = SubjectVisit
+
     subject_visit = models.OneToOneField(SubjectVisit)
 
     history = AuditTrail()
