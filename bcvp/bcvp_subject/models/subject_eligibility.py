@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models import get_model
 
 from edc_base.audit_trail import AuditTrail
 from edc_base.encrypted_fields import EncryptedCharField, IdentityField, FirstnameField, LastnameField
@@ -161,6 +162,14 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
                 dob=self.dob, initials=self.initials, identity=self.identity)
         except RecentInfection.DoesNotExist as e:
             raise exception_cls(str(e))
+
+    @property
+    def subject_refusal(self):
+        SubjectRefusal = get_model('bcvp_subject', 'SubjectRefusal')
+        try:
+            return SubjectRefusal.objects.get(subject_eligibility=self)
+        except SubjectRefusal.DoesNotExist:
+            return None
 
     class Meta:
         app_label = 'bcvp_subject'

@@ -4,16 +4,11 @@ from dateutil.relativedelta import relativedelta
 from edc_constants.constants import YES, NO, ALIVE, MALE, DEAD
 from edc_registration.models.registered_subject import RegisteredSubject
 
-from bcvp.bcvp_subject.models import (RecentInfection, SubjectEligibilityLoss, SubjectRefusal)
-from django.core.exceptions import ObjectDoesNotExist
-from bcvp.bcvp_subject.tests.factories import RecentInfectionFactory
-from bcvp.bcvp_subject.models.subject_locator import SubjectLocator
+from bcvp.bcvp_subject.models import RecentInfection
 
-from ..exceptions import NoMatchingRecentInfectionException
 from ..forms import SubjectEligibilityForm
 
 from .base_test_case import BaseTestCase
-from .factories import SubjectEligibilityFactory
 
 
 class TestEligibilityForm(BaseTestCase):

@@ -27,12 +27,11 @@
                 {% endif %}
                 <td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' subject_eligibility.pk %}?&next=section_url&section_name=subject">edit eligibility</A></td>
                 <td>{% if subject_eligibility.is_eligible %}YES{% else %}no{% endif %}</td>
-                {{subject_eligibility.is_refused}}
                 {% if subject_eligibility.is_refused %}
-                    {% if subject_refusal %}
-                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_change' subject_refusal.pk %}?&next=section_url&section_name=subject">Edit refusal report</A></td>
+                    {% if subject_eligibility.subject_refusal.reason == None %}
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">Add refusal report</A></td>
                     {% else %}
-                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusalreport_add' %}?&next=section_url&section_name=subject">Add refusal report</A></td>
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' subject_eligibility.subject_refusal.pk %}?&next=section_url&section_name=subject">Edit refusal report</A></td>
                     {% endif %}
                 {% else %}
                     <td>-----</td>
