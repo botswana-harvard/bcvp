@@ -9,7 +9,7 @@ from edc_base.audit_trail import AuditTrail
 from edc_base.encrypted_fields import EncryptedCharField, IdentityField, FirstnameField, LastnameField
 from edc_base.model.models import BaseUuidModel
 from edc_base.model.validators import datetime_not_before_study_start, datetime_not_future
-from edc_constants.choices import YES_NO, ALIVE_DEAD, DEAD
+from edc_constants.choices import YES_NO, ALIVE_DEAD, DEAD, GENDER
 from edc_constants.constants import NO
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
@@ -62,7 +62,8 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
 
     gender = models.CharField(
         verbose_name="Gender",
-        max_length=1)
+        max_length=1,
+        choices=GENDER)
 
     dob = models.DateField(
         verbose_name="Date of birth",
