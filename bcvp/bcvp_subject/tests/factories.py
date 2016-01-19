@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from edc_constants.constants import YES, NO
 from bcvp.bcvp_subject.models import (SubjectEligibility, RecentInfection, SubjectLocator, SubjectConsent,
-                                      SubjectVisit)
+                                      SubjectVisit, SubjectRefusal)
 from edc_constants.choices import ALIVE
 from edc_consent.tests.factories import TestConsentModelFactory
 from edc_visit_tracking.tests.factories import TestVisitFactory
@@ -55,6 +55,15 @@ class SubjectConsentFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = SubjectConsent
+
+
+class SubjectRefusalFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = SubjectRefusal
+
+    refusal_date = date.today()
+    reason = 'Fear of needles'
 
 
 class SubjectVisitFactory(TestVisitFactory):

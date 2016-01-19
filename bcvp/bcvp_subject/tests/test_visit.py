@@ -28,7 +28,9 @@ class TestVisit(BaseTestCase):
         recent_infection = RecentInfection.objects.first()
         eligibility = SubjectEligibilityFactory(
             registered_subject=recent_infection.registered_subject,
-            **recent_infection.eligibility_matching_dict
+            dob=recent_infection.dob,
+            initials=recent_infection.recent_infection,
+            identity=recent_infection.identity,
         )
         self.consent = SubjectConsent.objects.create(
             registered_subject=recent_infection.registered_subject,

@@ -1,7 +1,7 @@
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
-from edc_constants.constants import YES, NO, ALIVE, MALE, DEAD
+from edc_constants.constants import YES, NO, ALIVE, MALE, FEMALE, DEAD
 from edc_registration.models.registered_subject import RegisteredSubject
 
 from bcvp.bcvp_subject.models import RecentInfection
@@ -48,6 +48,14 @@ class TestEligibilityForm(BaseTestCase):
         errors = ''.join(form.errors.get('__all__'))
         self.assertIn(
             'You indicated that participant does not have an OMANG, you therefore CANNOT provide it.', errors)
+
+    def test_identity_gender(self):
+        "Check omang gender digit vs gender"
+        self.data['gender'] = FEMALE
+        form = SubjectEligibilityForm(data=self.data)
+        errors = ''.join(form.errors.get('__all__'))
+        self.assertIn(
+            'Identity provided indicates participant is Male and yet gender is indicated to be Female.', errors)
 
     def test_deceased_cannot_be_willing_to_participate(self):
         "Assert that if deceased, willing to participate should not be answered"
