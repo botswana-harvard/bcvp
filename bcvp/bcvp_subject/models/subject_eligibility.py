@@ -1,6 +1,7 @@
 import uuid
 
 from dateutil.relativedelta import relativedelta
+
 from django.core.validators import RegexValidator
 from django.db import models
 
@@ -18,7 +19,6 @@ from bcvp.bcvp.constants import MIN_AGE_OF_CONSENT, MAX_AGE_OF_CONSENT
 from ..exceptions import NoMatchingRecentInfectionException
 
 from .recent_infection import RecentInfection
-from datetime import timedelta
 
 
 class SubjectEligibilityManager(models.Manager):
@@ -72,8 +72,6 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     age_in_years = models.IntegerField(
         verbose_name='Age')
 
-    identity = IdentityField()
-
     survival_status = models.CharField(
         verbose_name="Survival status",
         max_length=5,
@@ -82,12 +80,18 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     willing_to_participate = models.CharField(
         verbose_name="Is the subject willing to participate in the survey?",
         max_length=3,
-        choices=YES_NO)
+        choices=YES_NO,
+        null=True,
+        blank=True)
 
     has_omang = models.CharField(
         verbose_name="Is the subject\'s OMANG available to verify identity?",
         max_length=3,
         choices=YES_NO)
+
+    identity = IdentityField(
+        null=True,
+        blank=True)
 
     is_eligible = models.BooleanField(
         default=False,
@@ -118,7 +122,7 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     history = AuditTrail()
 
     def save(self, *args, **kwargs):
-        self.age_in_years=relativedelta(self.report_datetime.date(), self.dob).years
+        self.age_in_years = relativedelta(self.report_datetime.date(), self.dob).years
         if not self.id:
             self.eligibility_id = str(uuid.uuid4())
             self.recent_infection = self.get_recent_infection_or_raise()

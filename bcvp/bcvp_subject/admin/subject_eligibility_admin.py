@@ -27,6 +27,7 @@ class SubjectEligibilityAdmin(BaseModelAdmin):
     radio_fields = {
         'has_omang': admin.VERTICAL,
         'survival_status': admin.VERTICAL,
+        'gender': admin.VERTICAL,
         'willing_to_participate': admin.VERTICAL,
     }
 
