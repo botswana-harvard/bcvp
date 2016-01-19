@@ -11,7 +11,7 @@ from edc_base.encrypted_fields import EncryptedCharField, IdentityField, Firstna
 from edc_base.model.models import BaseUuidModel
 from edc_base.model.validators import datetime_not_before_study_start, datetime_not_future
 from edc_constants.choices import YES_NO, ALIVE_DEAD, DEAD, GENDER
-from edc_constants.constants import NO
+from edc_constants.constants import NO, YES
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
 
@@ -157,11 +157,18 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     def get_recent_infection_or_raise(self, exception_cls=None):
         """Return an instance of RecentInfection or raise."""
         exception_cls = exception_cls or NoMatchingRecentInfectionException
-        try:
-            return RecentInfection.objects.get(
-                dob=self.dob, initials=self.initials, identity=self.identity)
-        except RecentInfection.DoesNotExist as e:
-            raise exception_cls(str(e))
+        if self.has_omang == YES:
+            try:
+                return RecentInfection.objects.get(
+                    dob=self.dob, initials=self.initials, identity=self.identity)
+            except RecentInfection.DoesNotExist as e:
+                raise exception_cls(str(e))
+        else:
+            try:
+                return RecentInfection.objects.get(
+                    dob=self.dob, initials=self.initials)
+            except RecentInfection.DoesNotExist as e:
+                raise exception_cls(str(e))
 
     @property
     def subject_refusal(self):
