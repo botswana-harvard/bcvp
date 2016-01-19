@@ -10,7 +10,6 @@ class SubjectEligibilityForm(ModelForm):
 
     def clean(self):
         cleaned_data = super(SubjectEligibilityForm, self).clean()
-        self.validate_omang()
         self.validate_omang_gender()
         self.validate_willing_to_participate()
         SubjectEligibility(**cleaned_data).get_recent_infection_or_raise(forms.ValidationError)
@@ -26,17 +25,6 @@ class SubjectEligibilityForm(ModelForm):
             raise forms.ValidationError(
                 'Identity provided indicates participant is Male and yet gender is indicated to be Female. '
                 'Please correct.')
-
-    def validate_omang(self):
-        cleaned_data = self.cleaned_data
-        if cleaned_data.get('has_omang') == NO:
-            if cleaned_data.get('identity'):
-                raise forms.ValidationError(
-                    'You indicated that participant does not have an OMANG, you therefore CANNOT provide it.')
-        else:
-            if not cleaned_data.get('identity'):
-                raise forms.ValidationError(
-                    'You indicated that participant HAS an OMANG, please provide the OMANG number.')
 
     def validate_willing_to_participate(self):
         cleaned_data = self.cleaned_data

@@ -33,22 +33,6 @@ class TestEligibilityForm(BaseTestCase):
             'identity': self.recent_infection.identity,
         }
 
-    def test_identity_required_when_has_omang(self):
-        "Assert that if has_omang is indicated as YES, then Omang number should be provided"
-        self.data['identity'] = ''
-        form = SubjectEligibilityForm(data=self.data)
-        errors = ''.join(form.errors.get('__all__'))
-        self.assertIn(
-            'You indicated that participant HAS an OMANG, please provide the OMANG number.', errors)
-
-    def test_identity_not_required_when_no_omang(self):
-        "Assert that if has_omang is indicated as no, then Omang number should NOT be provided"
-        self.data['has_omang'] = NO
-        form = SubjectEligibilityForm(data=self.data)
-        errors = ''.join(form.errors.get('__all__'))
-        self.assertIn(
-            'You indicated that participant does not have an OMANG, you therefore CANNOT provide it.', errors)
-
     def test_identity_gender(self):
         "Check omang gender digit vs gender"
         self.data['gender'] = FEMALE

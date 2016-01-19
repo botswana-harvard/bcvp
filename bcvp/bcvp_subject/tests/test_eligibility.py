@@ -1,6 +1,6 @@
 from edc_constants.constants import SCREENED, YES, NO, ALIVE
 from edc_registration.models.registered_subject import RegisteredSubject
-
+from edc_call_manager.models import Call
 from bcvp.bcvp_subject.models import (
     RecentInfection, SubjectEligibilityLoss, SubjectRefusal)
 
@@ -49,6 +49,14 @@ class TestEligibility(BaseTestCase):
         self.assertEqual(SubjectLocator.objects.filter(
             registered_subject=recent_infection.registered_subject,
             subject_cell='72331115').count(), 1)
+
+    def test_recent_infection_creates_call_record(self):
+        """Assert that you have the same number of Call records as Recent Infection records"""
+        recent_infections = RecentInfection.objects.all().count()
+        calls = Call.objects.all().count()
+        self.assertEqual(calls, recent_infections)
+        RecentInfectionFactory(subject_identifier='1234')
+        self.assertFalse(RecentInfection.objects.all().count() != Call.objects.all().count())
 
     def test_eligibility_who_has_omang(self):
         """Assert eligibility of a subject with an Omang."""

@@ -29,7 +29,7 @@ class TestVisit(BaseTestCase):
         eligibility = SubjectEligibilityFactory(
             registered_subject=recent_infection.registered_subject,
             dob=recent_infection.dob,
-            initials=recent_infection.recent_infection,
+            initials=recent_infection.initials,
             identity=recent_infection.identity,
         )
         self.consent = SubjectConsent.objects.create(

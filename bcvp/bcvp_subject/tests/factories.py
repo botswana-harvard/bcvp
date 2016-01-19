@@ -6,7 +6,6 @@ from edc_constants.constants import YES, NO
 from bcvp.bcvp_subject.models import (SubjectEligibility, RecentInfection, SubjectLocator, SubjectConsent,
                                       SubjectVisit, SubjectRefusal)
 from edc_constants.choices import ALIVE
-from edc_consent.tests.factories import TestConsentModelFactory
 from edc_visit_tracking.tests.factories import TestVisitFactory
 
 
@@ -32,7 +31,7 @@ class RecentInfectionFactory(factory.DjangoModelFactory):
     first_name = factory.Faker('name')
     dob = date(1980, 01, 01)
     initials = 'AB'
-    identity = factory.Sequence(lambda n: '34561987{0}'.format(n))
+    identity = factory.Sequence(lambda n: '94561987{0}'.format(n))
     specimen_identifier = factory.Sequence(lambda n: '{0}'.format(n))
     test_date = date.today()
     drawn_datetime = timezone.now()

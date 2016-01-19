@@ -157,18 +157,11 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
     def get_recent_infection_or_raise(self, exception_cls=None):
         """Return an instance of RecentInfection or raise."""
         exception_cls = exception_cls or NoMatchingRecentInfectionException
-        if self.has_omang == YES:
-            try:
-                return RecentInfection.objects.get(
-                    dob=self.dob, initials=self.initials, identity=self.identity)
-            except RecentInfection.DoesNotExist as e:
-                raise exception_cls(str(e))
-        else:
-            try:
-                return RecentInfection.objects.get(
-                    dob=self.dob, initials=self.initials)
-            except RecentInfection.DoesNotExist as e:
-                raise exception_cls(str(e))
+        try:
+            return RecentInfection.objects.get(
+                dob=self.dob, initials=self.initials, identity=self.identity)
+        except RecentInfection.DoesNotExist as e:
+            raise exception_cls(str(e))
 
     @property
     def subject_refusal(self):

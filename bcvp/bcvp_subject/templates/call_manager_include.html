@@ -1,0 +1,72 @@
+{% load crypto_tags %}
+{% load url from future %}
+{% load admin_urls %}
+
+<div class="results">
+      <table cellspacing="0" id="result_list">
+        <thead><tr>
+        <th>Dashboard</th>
+        <th>ContactNo</th>
+        <th>Call Scheduled</th>
+        <th>Call Entries</th>
+        <th>Map Image</th>
+        <th>Coordinates</th>
+        <th>Eligible</th>
+        <th>Loss</th>
+        <th>Refusal</th>
+        <th>User Created</th>  
+        <th>Date Created</th>
+        <th>Host</th>       
+        </thead></tr>
+        <tbody>
+      {% for call_record in search_result.object_list %}
+          <tr class="{% cycle 'row2' 'row1' %}">
+          		{% if call_record.eligibility and call_record.eligibility.is_consented %}
+                    <td><A href="{% url 'subject_dashboard_url' dashboard_type='subject' dashboard_model='subject_eligibility' dashboard_id=call_record.eligibility.pk show='appointments' %}"><div nowrap>{{ call_record.eligibility.registered_subject.subject_identifier }}</div></A></td>
+          		{% elif call_record.eligibility and call_record.eligibility.is_eligible %}
+                    <td><A href="{% url 'admin:bcvp_subject_subjectconsent_add' %}?registered_subject={{call_record.eligibility.registered_subject.pk}}&next=section_url&section_name=call_manager">({{call_record.recent_infection.subject_identifier}}) add subject consent</A></td>
+                {% elif call_record.eligibility and not call_record.eligibility.is_eligible %}
+                    <td>{{ call_record.eligibility.reason_ineligible }}</td>
+                {% else %}
+                	<td>({{call_record.recent_infection.subject_identifier}}) Pending Eligibility</td>
+                {% endif %}
+          		<td>{{call_record.recent_infection.subject_cell}}, {{call_record.recent_infection.subject_cell_alt}}</td>
+          		<td>{{call_record.scheduled}}</td>
+          		<td>
+          			<ol>
+          				{% for call_entry in call_record.call_entries %}
+          					<li><A href="{% url 'admin:edc_call_manager_logentry_change' call_entry.0 %}?&next=section_url&section_name=call_manager" ><div nowrap>{{call_entry.1}}</div></A></li>
+          				{% endfor %}
+          				{% if call_record.next_call_entry %}
+          					<li><A href="{% url 'admin:edc_call_manager_logentry_add' %}?call_log={{call_record.next_call_entry.0}}&next=section_url&section_name=call_manager" ><div nowrap>Add New</div></A></li>
+          				{% else %}
+          					Entries done.
+          				{% endif %}
+          			</ol>
+          		</td>
+          		<td>Map Image</td>
+          		<td>{{call_record.recent_infection.gps_lon}}, {{call_record.recent_infection.gps_lat}}</td>
+          		{% if call_record.eligibility %}
+          			<td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' call_record.eligibility.pk %}?&next=section_url&section_name=call_manager">edit eligibility</A></td>
+          		{% else %}
+          			<td><A href="{% url 'admin:bcvp_subject_subjecteligibility_add' %}?&next=section_url&section_name=call_manager">add eligibility</A></td>
+          		{% endif %}
+                <td>{% if call_record.eligibility.is_eligible %}YES{% else %}NO{% endif %}</td>
+          		{% if call_record.eligibility.is_refused %}
+                    {% if call_record.eligibility.subject_refusal.reason == None %}
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call_record.eligibility.subject_refusal.pk %}?&next=section_url&section_name=call_manager">edit refusal</A></td>
+                    {% else %}
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_add' %}?&next=section_url&section_name=call_manager">add refusal</A></td>
+                    {% endif %}
+                {% else %}
+                    <td>-----</td>
+                {% endif %}
+                <td>{{call_record.user_created}}</td>
+                <td>{{call_record.created|date:"d M Y H:i"}}</td>
+                <td>{{call_record.hostname_created}}</td>
+         </tr>
+      {% endfor %}
+      <tr><td colspan="9">{{ search_result.object_list.count }} call records found.</td></tr>
+      </tbody>
+      </table>
+      </div>
