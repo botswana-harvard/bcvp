@@ -128,6 +128,7 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         if not self.id:
             self.eligibility_id = str(uuid.uuid4())
             self.recent_infection = self.get_recent_infection_or_raise()
+            self.registered_subject = self.recent_infection.registered_subject
         self.is_eligible, self.reason_ineligible = self.check_eligibility()
         super(SubjectEligibility, self).save(*args, **kwargs)
 

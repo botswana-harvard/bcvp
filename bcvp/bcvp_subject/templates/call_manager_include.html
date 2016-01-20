@@ -49,10 +49,10 @@
           		{% endif %}
                 <td>{% if call_record.eligibility.is_eligible %}YES{% else %}NO{% endif %}</td>
           		{% if call_record.eligibility.is_refused %}
-                    {% if call_record.eligibility.subject_refusal.reason == None %}
-                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call_record.eligibility.subject_refusal.pk %}?&next=section_url&section_name=call_manager">edit refusal</A></td>
+                    {% if not call_record.eligibility.subject_refusal.reason %}
+                    	<td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call_record.eligibility.subject_refusal.pk %}?&next=section_url&section_name=call_manager">add refusal</A></td>
                     {% else %}
-                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_add' %}?&next=section_url&section_name=call_manager">add refusal</A></td>
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call_record.eligibility.subject_refusal.pk %}?&next=section_url&section_name=call_manager">edit refusal</A></td>
                     {% endif %}
                 {% else %}
                     <td>-----</td>
@@ -64,5 +64,20 @@
       {% endfor %}
       <tr><td colspan="9">{{ search_result.object_list.count }} call records found.</td></tr>
       </tbody>
-      </table>
-      </div>
+  </table>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if search_result.has_previous %}
+            <a href="?page={{ search_result.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ search_result.number }} of {{ search_result.paginator.num_pages }}.
+        </span>
+
+        {% if search_result.has_next %}
+            <a href="?page={{ search_result.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>    
