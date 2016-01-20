@@ -40,10 +40,3 @@ class TestCalls(BaseTestCase):
         self.assertEqual(LogEntry.objects.filter(log__call=self).count(), 0)
         self.assertEqual(call.next_call_entry[0], Log.objects.get(call=call).id)
 
-    def test_next_call_entry_not_available(self):
-        call = BcvpCall.objects.get(subject_identifier=self.recent_infection.subject_identifier)
-        call_log = Log.objects.get(call=call)
-        for _ in range(0, 3):
-            LogEntry.objects.create(log=call_log, call_datetime=datetime.now(), contact_type=CONTACT_TYPE[0][0],
-                                    survival_status=ALIVE, call_again=NO)
-        self.assertFalse(call.next_call_entry)

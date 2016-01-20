@@ -35,6 +35,11 @@ class RecentInfectionFactory(factory.DjangoModelFactory):
     specimen_identifier = factory.Sequence(lambda n: '{0}'.format(n))
     test_date = date.today()
     drawn_datetime = timezone.now()
+    result = 'result'
+    gps_lon = factory.Sequence(lambda n: '25.5460{0}'.format(n))
+    gps_lat = factory.Sequence(lambda n: '-25.3306{0}'.format(n))
+    subject_cell = factory.Sequence(lambda n: '7346589{0}'.format(n))
+    subject_cell_alt = factory.Sequence(lambda n: '7566589{0}'.format(n))
 
 
 class SubjectLocatorFactory(factory.DjangoModelFactory):

@@ -91,6 +91,9 @@ class RecentInfection(BaseUuidModel):
 
     history = AuditTrail()
 
+    def __unicode__(self):
+        return self.subject_identifier
+
     @property
     def cell(self):
         return self.contact_cell_number

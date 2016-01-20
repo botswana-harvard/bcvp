@@ -33,5 +33,5 @@ class CallSearchByWord(BaseSearchByWord):
         qset = (
             Q(subject_identifier__icontains=self.search_value) |
             Q(first_name__icontains=self.search_value) |
-            Q(first_name__icontains=self.search_value))
+            Q(registered_subject__identity__icontains=self.search_value))
         return qset

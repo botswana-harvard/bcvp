@@ -22,9 +22,12 @@ class BcvpCall(Call):
             return None
 
     @property
-    def call_entries(self):
-        return [(call_entry.id, call_entry.call_datetime.strftime('%Y-%m-%d %H:%M')) for
-                call_entry in LogEntry.objects.filter(log__call=self)]
+    def latest_entry(self):
+        latest_entry = LogEntry.objects.filter(log__call=self).order_by('-call_datetime')
+        if latest_entry.exists():
+            return (latest_entry.first().id, latest_entry.first().call_datetime.strftime('%Y-%m-%d %H:%M'))
+        else:
+            return None
 
     @property
     def next_call_entry(self):
@@ -32,10 +35,7 @@ class BcvpCall(Call):
             Log.objects.get(call=self)
         except Log.DoesNotExist:
             Log.objects.create(call=self)
-        if LogEntry.objects.filter(log__call=self).count() < 3:
-            return (Log.objects.filter(call=self).first().id, timezone.now().strftime('%Y-%m-%d %H:%M'))
-        else:
-            return False
+        return (Log.objects.filter(call=self).first().id, timezone.now().strftime('%Y-%m-%d %H:%M'))
 
     class Meta:
         proxy = True
