@@ -91,9 +91,7 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
         max_length=3,
         choices=YES_NO)
 
-    identity = IdentityField(
-        null=True,
-        blank=True)
+    identity = IdentityField()
 
     is_eligible = models.BooleanField(
         default=False,
