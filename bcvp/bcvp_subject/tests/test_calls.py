@@ -1,7 +1,5 @@
-from datetime import datetime
-from edc_constants.constants import YES, ALIVE, NO
+from edc_constants.constants import YES, ALIVE
 from edc_call_manager.models import Log, LogEntry
-from edc_call_manager.choices import CONTACT_TYPE
 
 from bcvp.bcvp_subject.models import (RecentInfection, BcvpCall)
 
@@ -39,4 +37,3 @@ class TestCalls(BaseTestCase):
         call = BcvpCall.objects.get(subject_identifier=self.recent_infection.subject_identifier)
         self.assertEqual(LogEntry.objects.filter(log__call=self).count(), 0)
         self.assertEqual(call.next_call_entry[0], Log.objects.get(call=call).id)
-
