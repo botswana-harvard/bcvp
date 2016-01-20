@@ -9,7 +9,7 @@ class CallSearchByWord(BaseSearchByWord):
 
     name = 'word'
     search_model = BcvpCall
-    order_by = ['-created']
+    order_by = ['-modified']
     template = 'call_manager_include.html'
 
     @property
