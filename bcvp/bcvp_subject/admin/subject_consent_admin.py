@@ -69,7 +69,7 @@ class SubjectConsentAdmin(BaseModelAdmin):
                    'is_literate',
                    'identity_type')
 
-    actions = [
+    actions += [
         export_as_csv_action(
             description="CSV Export of Subject Consent",
             fields=[],
