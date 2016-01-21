@@ -47,7 +47,13 @@
           		{% else %}
           			<td><A href="{% url 'admin:bcvp_subject_subjecteligibility_add' %}?&next=section_url&section_name=call_manager">add eligibility</A></td>
           		{% endif %}
-                <td>{% if call_record.eligibility.is_eligible %}NO{% else %}YES{% endif %}</td>
+                <td>
+                	{% if call_record.eligibility and not call_record.eligibility.is_eligible %}
+                		YES
+                	{% else %}
+                		NO
+                	{% endif %}         
+                </td>
           		{% if call_record.eligibility.is_refused %}
                     {% if not call_record.eligibility.subject_refusal.reason %}
                     	<td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call_record.eligibility.subject_refusal.pk %}?&next=section_url&section_name=call_manager">add refusal</A></td>
