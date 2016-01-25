@@ -47,6 +47,7 @@ class SubjectLocatorFactory(factory.DjangoModelFactory):
     class Meta:
         model = SubjectLocator
 
+    report_datetime = timezone.now()
     may_follow_up = YES
     home_visit_permission = YES
     physical_address = 'near general dealer black gate'

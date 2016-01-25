@@ -11,32 +11,33 @@ class SubjectLocatorAdmin(BaseLocatorModelAdmin):
 
     form = SubjectLocatorForm
 
-    fields = ('subject_visit',
-              'registered_subject',
-              'date_signed',
-              'mail_address',
-              'home_visit_permission',
-              'physical_address',
-              'may_follow_up',
-              'subject_cell',
-              'subject_cell_alt',
-              'subject_phone',
-              'subject_phone_alt',
-              'may_call_work',
-              'subject_work_place',
-              'subject_work_phone',
-              'may_contact_someone',
-              'contact_name',
-              'contact_rel',
-              'contact_physical_address',
-              'contact_cell',
-              'contact_phone')
-    list_display = ('subject_visit', 'may_follow_up', 'may_call_work')
+    fields = (
+        'registered_subject',
+        'report_datetime',
+        'date_signed',
+        'mail_address',
+        'home_visit_permission',
+        'physical_address',
+        'may_follow_up',
+        'subject_cell',
+        'subject_cell_alt',
+        'subject_phone',
+        'subject_phone_alt',
+        'may_call_work',
+        'subject_work_place',
+        'subject_work_phone',
+        'may_contact_someone',
+        'contact_name',
+        'contact_rel',
+        'contact_physical_address',
+        'contact_cell',
+        'contact_phone')
+    list_display = ('may_follow_up', 'may_call_work')
 
     list_filter = ('may_follow_up', 'may_call_work')
 
     search_fields = (
-        'subject_visit__appointment__subject_identifier', 'subject_cell', 'subject_cell_alt',
+        'registered_subject__subject_identifier', 'subject_cell', 'subject_cell_alt',
         'subject_phone', 'subject_phone_alt', 'subject_work_place', 'subject_work_phone')
 
     radio_fields = {"home_visit_permission": admin.VERTICAL,

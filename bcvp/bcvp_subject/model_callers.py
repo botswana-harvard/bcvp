@@ -8,6 +8,6 @@ from .models import RecentInfection, SubjectConsent, SubjectLocator
 class SubjectModelCaller(ModelCaller):
     label = 'MPP Subject'
     locator_model = SubjectLocator
-    locator_filter = 'subject_visit__appointment__registered_subject__subject_identifier'
+    locator_filter = 'registered_subject__subject_identifier'
     unscheduling_model = SubjectConsent
     interval = WEEKLY

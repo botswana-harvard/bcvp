@@ -1,4 +1,5 @@
 from django.test.testcases import TestCase
+from django.utils import timezone
 
 from bcvp.bcvp_subject.tests.factories import RecentInfectionFactory
 from bcvp.load_edc import load_edc

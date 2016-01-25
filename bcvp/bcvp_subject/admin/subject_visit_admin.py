@@ -21,8 +21,6 @@ class SubjectVisitAdmin(VisitAdminMixin, BaseModelAdmin):
         fields = copy(self.fields)
         fields.remove('information_provider')
         fields.remove('information_provider_other')
-        fields.remove('survival_status')
-        fields.remove('last_alive_date')
         return [(None, {'fields': fields})]
 
 admin.site.register(SubjectVisit, SubjectVisitAdmin)

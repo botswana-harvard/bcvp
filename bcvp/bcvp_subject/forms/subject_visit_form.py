@@ -33,10 +33,6 @@ class SubjectVisitForm (VisitFormMixin, BaseModelForm):
         choices=[choice for choice in VISIT_INFO_SOURCE],
         widget=AdminRadioSelect(renderer=AdminRadioFieldRenderer))
 
-    def clean(self):
-        cleaned_data = super(SubjectVisitForm, self).clean()
-        return cleaned_data
-
     class Meta:
         model = SubjectVisit
         fields = '__all__'
