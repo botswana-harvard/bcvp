@@ -57,12 +57,12 @@ class TestHivCareAdherenceForm(BaseTestCase):
             'ever_taken_arv': NO,
             'why_no_arv': '',
             'why_no_arv_other': '',
-            'first_arv': date.today() - relativedelta(years=2),
+            'first_arv': '',
             'on_arv': '',
             'clinic_receiving_from': '',
             'next_appointment_date': '',
             'arv_stop_date': '',
-            'arv_stop': '',
+            'arv_stop': NO,
             'arv_stop_other': '',
             'adherence_4_day': '',
             'adherence_4_wk': '',
@@ -104,11 +104,35 @@ class TestHivCareAdherenceForm(BaseTestCase):
         form = HivCareAdherenceForm(data=self.data)
         errors = ''.join(form.errors.get('__all__'))
         self.assertIn(
-            'You have indicated that HIV related medical or clinical care was recieved.',
+            'You have indicated that HIV related medical or clinical care was received.',
             errors)
 
     def test_ever_taken_arv_1(self):
+        """Assert that when participant is indicated to have never taken ARV, then reason why not
+        taken should not be provided."""
         self.data['ever_taken_arv'] = NO
         form = HivCareAdherenceForm(data=self.data)
         errors = ''.join(form.errors.get('__all__'))
         self.assertIn('You have indicated that ARVs were NOT taken.', errors)
+
+    def test_ever_taken_arv_2(self):
+        """Assert that when participant is indicated to have ever taken ARV then first arv date is required."""
+        self.data['ever_taken_arv'] = YES
+        form = HivCareAdherenceForm(data=self.data)
+        errors = ''.join(form.errors.get('__all__'))
+        self.assertIn('Please indicate ARV start date.', errors)
+
+    def test_on_arv_must_show_evidence(self):
+        """Assert that if currently on arv, then must indicate if there is evidence"""
+        self.data['on_arv'] = YES
+        form = HivCareAdherenceForm(data=self.data)
+        errors = ''.join(form.errors.get('__all__'))
+        self.assertIn('Please indicate if there is evidence.', errors)
+
+    def test_not_on_arv_must_no_evidence(self):
+        """Assert that if currently on arv, then must indicate if there is evidence"""
+        self.data['on_arv'] = NO
+        self.data['clinic_receiving_from'] = NO
+        form = HivCareAdherenceForm(data=self.data)
+        errors = ''.join(form.errors.get('__all__'))
+        self.assertIn('do not indicate whether there is evidence participant is on therapy', errors)

@@ -12,6 +12,7 @@ from edc_sync.models import SyncModelMixin
 from ..managers import LocatorManager
 
 from .subject_off_study import SubjectOffStudy
+from .subject_visit import SubjectVisit
 
 
 class SubjectLocator(LocatorMixin, SyncModelMixin, OffStudyMixin, BaseUuidModel):
@@ -19,6 +20,8 @@ class SubjectLocator(LocatorMixin, SyncModelMixin, OffStudyMixin, BaseUuidModel)
     """ A model completed by the user to capture locator information. """
 
     off_study_model = SubjectOffStudy
+
+    subject_visit = models.OneToOneField(SubjectVisit, null=True)
 
     registered_subject = models.OneToOneField(RegisteredSubject, null=True)
 
