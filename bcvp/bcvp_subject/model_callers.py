@@ -1,5 +1,5 @@
 from edc_call_manager.decorators import register
-from edc_call_manager.model_caller import ModelCaller, WEEKLY, Subject
+from edc_call_manager.model_caller import ModelCaller, WEEKLY
 
 from .models import RecentInfection, SubjectConsent, SubjectLocator
 
