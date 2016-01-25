@@ -1,3 +1,6 @@
+import urllib2
+import json
+from datetime import datetime
 from django.db import models
 from django.core.validators import RegexValidator
 
@@ -91,6 +94,19 @@ class RecentInfection(BaseUuidModel):
 
     history = AuditTrail()
 
+    def save(self, *args, **kwargs):
+        # TODO: Make this URL generated not hard coded.
+        url = 'http://localhost:8012/bhp_sync/api_cn/subjectconsent/?format=json&limit=1000&subject_identifier={}'.format(self.subject_identifier)
+        consent_json = self.pull_rest_json(url)
+        self.drawn_datetime = datetime.now()
+        self.subject_identifier = consent_json['objects'][0]['subject_identifier']
+        self.first_name = consent_json['objects'][0]['first_name']
+        self.dob = datetime.strptime(consent_json['objects'][0]['dob'], '%Y-%m-%d').date()
+        self.identity = consent_json['objects'][0]['identity']
+        self.initials = consent_json['objects'][0]['initials']
+        self.specimen_identifier = consent_json['objects'][0]['subject_identifier']
+        super(RecentInfection, self).save(*args, **kwargs)
+
     def __unicode__(self):
         return self.subject_identifier
 
@@ -117,6 +133,19 @@ class RecentInfection(BaseUuidModel):
         eligibility_matching_attr['initials'] = self.initials
         eligibility_matching_attr['identity'] = self.identity
         return eligibility_matching_attr
+
+    def pull_rest_json(self, url):
+        try:
+            req = urllib2.Request(url=url)
+        except urllib2.URLError, err:
+            print '{}, {}'.format(err, url)
+        try:
+            f = urllib2.urlopen(req)
+            response = f.read()
+            json_response = json.loads(response)
+        except urllib2.HTTPError, err:
+            print '{}, {}'.format(err, url)
+        return json_response
 
     class Meta:
         app_label = 'bcvp_subject'
