@@ -69,7 +69,7 @@ class HivCareAdherenceForm(BaseSubjectModelForm):
                 raise forms.ValidationError('You have indicated that ARVs were taken. Please indicate ARV start date.')
 
     def validate_on_arv(self):
-        cleaned_data = self.cleaned_data()
+        cleaned_data = self.cleaned_data
         if cleaned_data.get('on_arv') == YES:
             if not cleaned_data.get('arv_evidence'):
                 self._errors["arv_evidence"] = ErrorList(["This field cannot be None"])
@@ -83,7 +83,7 @@ class HivCareAdherenceForm(BaseSubjectModelForm):
             if cleaned_data.get('arv_evidence'):
                 self._errors["arv_evidence"] = ErrorList(["This field should not be filled."])
                 raise forms.ValidationError(
-                    'If patient is not on ARV, do not indicate whether there is evidence participant is on therapy.')
+                    'If patient is not on ARV, do not indicate whether there evidence participant is on therapy exists')
             if cleaned_data.get('clinic_receiving_from'):
                 self._errors["clinic_receiving_from"] = ErrorList(["This field should not be filled."])
                 raise forms.ValidationError(
