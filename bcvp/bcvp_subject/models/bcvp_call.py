@@ -1,8 +1,9 @@
 from django.utils import timezone
+
 from edc_call_manager.models import Call, Log, LogEntry
 
-from .subject_eligibility import SubjectEligibility
 from .recent_infection import RecentInfection
+from .subject_eligibility import SubjectEligibility
 
 
 class BcvpCall(Call):
@@ -30,7 +31,7 @@ class BcvpCall(Call):
             return None
 
     @property
-    def next_call_entry(self):
+    def next_call_log(self):
         try:
             Log.objects.get(call=self)
         except Log.DoesNotExist:

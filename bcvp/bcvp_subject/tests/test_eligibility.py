@@ -50,8 +50,8 @@ class TestEligibility(BaseTestCase):
             registered_subject=recent_infection.registered_subject,
             subject_cell='72331115').count(), 1)
 
-    def test_recent_infection_creates_call_record(self):
-        """Assert that you have the same number of Call records as Recent Infection records"""
+    def test_recent_infection_creates_call(self):
+        """Assert creates one Call per Recent Infection"""
         recent_infections = RecentInfection.objects.all().count()
         calls = Call.objects.all().count()
         self.assertEqual(calls, recent_infections)
@@ -65,7 +65,7 @@ class TestEligibility(BaseTestCase):
         self.assertTrue(subject_eligibility.is_eligible)
 
     def test_eligibility_who_has_no_omang(self):
-        """Test eligibility of a subject with no Omang."""
+        """Assert ineligible if no Omang."""
         self.data.update({'has_omang': NO})
         subject_eligibility = SubjectEligibilityFactory(**self.data)
         self.assertFalse(subject_eligibility.is_eligible)
