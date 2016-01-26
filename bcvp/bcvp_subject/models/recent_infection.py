@@ -10,6 +10,7 @@ from edc_base.bw.validators import BWCellNumber
 from edc_base.encrypted_fields import EncryptedCharField, EncryptedDecimalField, IdentityField, FirstnameField
 from edc_base.model.models import BaseUuidModel
 from edc_registration.models import RegisteredSubject
+from edc_map.classes import Mapper
 
 
 class RecentInfection(BaseUuidModel):
@@ -117,12 +118,12 @@ class RecentInfection(BaseUuidModel):
                 self.subject_cell_alt = locator_json['objects'][0]['kin_cell']
                 url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format('api_hd', 'household', self.subject_identifier)
                 household_json = self.pull_rest_json(url)
-                lat, long = self.covert_coordinates(household_json['objects'][0]['gps_point_1'],
-                                                    household_json['objects'][0]['gps_point_11'],
-                                                    household_json['objects'][0]['gps_point_2'],
-                                                    household_json['objects'][0]['gps_point_21'])
+                lat, lon = self.covert_coordinates(household_json['objects'][0]['gps_point_1'],
+                                                   household_json['objects'][0]['gps_point_11'],
+                                                   household_json['objects'][0]['gps_point_2'],
+                                                   household_json['objects'][0]['gps_point_21'])
                 self.gps_lat = lat
-                self.gps_lon = long
+                self.gps_lon = lon
         super(RecentInfection, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -166,7 +167,10 @@ class RecentInfection(BaseUuidModel):
         return json_response
 
     def covert_coordinates(self, south_deg, soth_mnts, east_deg, east_mnts):
-        return ('25.00000', '23.00000')
+        mapper = Mapper()
+        lat = mapper.gps_lat(south_deg, soth_mnts)
+        lon = mapper.gps_lon(east_deg, east_mnts)
+        return (lat, lon)
 
     class Meta:
         app_label = 'bcvp_subject'
