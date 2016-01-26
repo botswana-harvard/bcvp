@@ -37,6 +37,12 @@ CATTLEPOSTLANDS_CHOICE = (
     ('not_answering', 'Don\'t want to answer'),
 )
 
+DAY_MON_YEAR = (
+    ('days', 'Days'),
+    ('months', 'Months'),
+    ('years', 'Years'),
+)
+
 INTERCOURSE_TYPE = (
     ('Vaginal', 'Vaginal sex'),
     ('Anal', 'Anal sex'),

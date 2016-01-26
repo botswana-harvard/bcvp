@@ -19,9 +19,9 @@ class RecentPartnerAdmin(BaseSubjectModelAdmin):
         "partner_age",
         "partner_gender",
         "last_sex_contact",
-        "last_sex_contact_other",
+        "last_sex_period",
         "first_sex_contact",
-        "first_sex_contact_other",
+        "first_sex_period",
         "regular_sex",
         "having_sex",
         "having_sex_reg",
@@ -44,6 +44,8 @@ class RecentPartnerAdmin(BaseSubjectModelAdmin):
         "status_disclosure": admin.VERTICAL,
         "multiple_partners": admin.VERTICAL,
         "intercourse_type": admin.VERTICAL,
+        "last_sex_period": admin.VERTICAL,
+        "first_sex_period": admin.VERTICAL,
     }
 
 admin.site.register(RecentPartner, RecentPartnerAdmin)
