@@ -14,6 +14,7 @@ class RecentInfectionAdmin(BaseSubjectModelAdmin):
         'subject_identifier',
         'first_name',
         'initials',
+        'identity',
         'born',
         'specimen_identifier',
         'subject_cell',
