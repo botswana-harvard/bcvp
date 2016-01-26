@@ -1,3 +1,7 @@
+import urllib2
+import json
+from django.core.exceptions import ValidationError
+from datetime import datetime
 from django.db import models
 from django.core.validators import RegexValidator
 
@@ -91,6 +95,36 @@ class RecentInfection(BaseUuidModel):
 
     history = AuditTrail()
 
+    def save(self, *args, **kwargs):
+        # TODO: Make this URL generated not hard coded.
+        if not self.id:
+            try:
+                RegisteredSubject.objects.get(subject_identifier=self.subject_identifier)
+                raise ValidationError('Recent infection record for "{}" already exists.'.format(self.subject_identifier))
+            except RegisteredSubject.DoesNotExist:
+                url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format('api_cn', 'subjectconsent', self.subject_identifier)
+                consent_json = self.pull_rest_json(url)
+                self.drawn_datetime = datetime.now()
+                self.subject_identifier = consent_json['objects'][0]['subject_identifier']
+                self.first_name = consent_json['objects'][0]['first_name']
+                self.dob = datetime.strptime(consent_json['objects'][0]['dob'], '%Y-%m-%d').date()
+                self.identity = consent_json['objects'][0]['identity']
+                self.initials = consent_json['objects'][0]['initials']
+                self.specimen_identifier = consent_json['objects'][0]['subject_identifier']
+                url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format('api_lc', 'locator', self.subject_identifier)
+                locator_json = self.pull_rest_json(url)
+                self.subject_cell = locator_json['objects'][0]['subject_prefered_cell']
+                self.subject_cell_alt = locator_json['objects'][0]['kin_cell']
+                url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format('api_hd', 'household', self.subject_identifier)
+                household_json = self.pull_rest_json(url)
+                lat, long = self.covert_coordinates(household_json['objects'][0]['gps_point_1'],
+                                                    household_json['objects'][0]['gps_point_11'],
+                                                    household_json['objects'][0]['gps_point_2'],
+                                                    household_json['objects'][0]['gps_point_21'])
+                self.gps_lat = lat
+                self.gps_lon = long
+        super(RecentInfection, self).save(*args, **kwargs)
+
     def __unicode__(self):
         return self.subject_identifier
 
@@ -117,6 +151,22 @@ class RecentInfection(BaseUuidModel):
         eligibility_matching_attr['initials'] = self.initials
         eligibility_matching_attr['identity'] = self.identity
         return eligibility_matching_attr
+
+    def pull_rest_json(self, url):
+        try:
+            req = urllib2.Request(url=url)
+        except urllib2.URLError:
+            raise
+        try:
+            f = urllib2.urlopen(req)
+            response = f.read()
+            json_response = json.loads(response)
+        except urllib2.HTTPError:
+            raise
+        return json_response
+
+    def covert_coordinates(self, south_deg, soth_mnts, east_deg, east_mnts):
+        return ('25.00000', '23.00000')
 
     class Meta:
         app_label = 'bcvp_subject'

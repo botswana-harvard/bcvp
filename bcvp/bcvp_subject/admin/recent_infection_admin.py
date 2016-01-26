@@ -8,24 +8,13 @@ from .base_subject_model_admin import BaseSubjectModelAdmin
 class RecentInfectionAdmin(BaseSubjectModelAdmin):
 
     fields = (
-        'subject_identifier',
-        'first_name',
-        'dob',
-        'initials',
-        'identity',
-        'test_date',
-        'specimen_identifier',
-        'drawn_datetime',
-        'result',
-        'gps_lon',
-        'gps_lat',
-        'subject_cell',
-        'subject_cell_alt')
+        'subject_identifier',)
 
     list_display = (
         'subject_identifier',
         'first_name',
         'initials',
+        'identity',
         'born',
         'specimen_identifier',
         'subject_cell',
