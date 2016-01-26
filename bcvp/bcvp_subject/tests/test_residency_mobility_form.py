@@ -1,6 +1,4 @@
 from django.utils import timezone
-from datetime import date
-from dateutil.relativedelta import relativedelta
 
 from edc_appointment.models.appointment import Appointment
 from edc_base.utils import edc_base_startup
