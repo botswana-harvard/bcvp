@@ -97,7 +97,7 @@ class RecentInfection(BaseUuidModel):
 
     def save(self, *args, **kwargs):
         # TODO: Make this URL generated not hard coded.
-        if not id:
+        if not self.id:
             try:
                 RegisteredSubject.objects.get(subject_identifier=self.subject_identifier)
                 raise ValidationError('Recent infection record for "{}" already exists.'.format(self.subject_identifier))
