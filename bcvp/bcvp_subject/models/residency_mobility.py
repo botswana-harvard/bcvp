@@ -3,6 +3,7 @@ from django.db import models
 from edc_base.audit_trail import AuditTrail
 from edc_constants.constants import NOT_APPLICABLE
 from edc_constants.choices import YES_NO
+from edc_base.model.fields import OtherCharField
 
 from bcvp.bcvp.choices import LENGTHRESIDENCE_CHOICE, NIGHTSAWAY_CHOICE, CATTLEPOSTLANDS_CHOICE
 
@@ -50,11 +51,7 @@ class ResidencyMobility(SubjectCrfModel):
         choices=CATTLEPOSTLANDS_CHOICE,
         default=NOT_APPLICABLE)
 
-    cattle_postlands_other = models.CharField(
-        verbose_name="Give the name of the community",
-        max_length=65,
-        null=True,
-        blank=True)
+    cattle_postlands_other = OtherCharField()
 
     history = AuditTrail()
 
