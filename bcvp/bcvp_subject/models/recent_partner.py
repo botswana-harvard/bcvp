@@ -5,7 +5,8 @@ from edc_base.model.fields import OtherCharField
 from edc_constants.choices import GENDER, POS_NEG_UNKNOWN
 from edc_constants.choices import YES_NO_REFUSED, YES_NO_DONT_KNOW
 
-from bcvp.bcvp.choices import RELATIONSHIP_TYPE, MAIN_PARTNER_RESIDENCY, SEX_REGULARITY, INTERCOURSE_TYPE
+from bcvp.bcvp.choices import (
+    RELATIONSHIP_TYPE, MAIN_PARTNER_RESIDENCY, SEX_REGULARITY, INTERCOURSE_TYPE, DAY_MON_YEAR)
 
 from .subject_crf_model import SubjectCrfModel
 
@@ -41,8 +42,12 @@ class RecentPartner(SubjectCrfModel):
         help_text=('You can give either a date or the number of days/months/years since last sex. '
                    'Interviewer, convert to days and record'))
 
-    last_sex_contact_other = OtherCharField(
-        verbose_name="Record if number is in days/months/years")
+    last_sex_period = models.CharField(
+        verbose_name="Record if number is in days/months/years",
+        choices=DAY_MON_YEAR,
+        max_length=6,
+        blank=True,
+        null=True,)
 
     first_sex_contact = models.IntegerField(
         verbose_name="When was the first time you had sex with this person (how long ago)? ",
@@ -50,8 +55,12 @@ class RecentPartner(SubjectCrfModel):
         help_text=('You can give either a date or the number of days/months/years since last sex. '
                    'Interviewer, convert to days and record'))
 
-    first_sex_contact_other = OtherCharField(
-        verbose_name="Record if number is in days/months/years")
+    first_sex_period = models.CharField(
+        verbose_name="Record if number is in days/months/years",
+        choices=DAY_MON_YEAR,
+        max_length=6,
+        blank=True,
+        null=True,)
 
     regular_sex = models.IntegerField(
         verbose_name="During the last 3 months (of your relationship if it has ended) how"
