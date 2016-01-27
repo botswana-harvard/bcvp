@@ -1,5 +1,9 @@
-from edc_constants.constants import YES, ALIVE
+from datetime import datetime
+
+from edc_constants.constants import YES, NO, ALIVE, CLOSED
+from edc_constants.choices import TIME_OF_DAY, TIME_OF_WEEK
 from edc_call_manager.models import Log, LogEntry
+from edc_call_manager.choices import CONTACT_TYPE
 
 from bcvp.bcvp_subject.models import (RecentInfection, BcvpCall)
 
@@ -37,3 +41,18 @@ class TestCalls(BaseTestCase):
         call = BcvpCall.objects.get(subject_identifier=self.recent_infection.subject_identifier)
         self.assertEqual(LogEntry.objects.filter(log__call=self).count(), 0)
         self.assertEqual(call.next_call_log[0], Log.objects.get(call=call).id)
+
+    def test_next_call_unavailable(self):
+        call = BcvpCall.objects.get(subject_identifier=self.recent_infection.subject_identifier)
+        next_call_tuple = call.next_call_log
+        LogEntry.objects.create(
+            log=Log.objects.get(id=next_call_tuple[0]),
+            call_datetime=datetime.now(),
+            contact_type=CONTACT_TYPE[0][0],
+            survival_status=ALIVE,
+            time_of_week=TIME_OF_WEEK[0][0],
+            time_of_day=TIME_OF_DAY[0][0],
+            call_again=NO)
+        self.assertIsNone(call.next_call_log)
+        self.assertTrue(BcvpCall.objects.filter(subject_identifier=self.recent_infection.subject_identifier,
+                                                call_status=CLOSED).exists())

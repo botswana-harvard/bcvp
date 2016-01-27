@@ -7,7 +7,7 @@
         <thead><tr>
         <th>Dashboard</th>
         <th>ContactNo</th>
-        <th>Call Scheduled</th>
+        <th>Call Status</th>
         <th>Recent Call</th>
         <th>Map Image</th>
         <th>Coordinates</th>
@@ -31,13 +31,17 @@
                 	<td>({{call.recent_infection.subject_identifier}}) Pending Eligibility</td>
                 {% endif %}
           		<td>{{call.recent_infection.subject_cell}}, {{call.recent_infection.subject_cell_alt}}</td>
-          		<td>{{call.scheduled}}</td>
+          		<td>{{call.call_status}}</td>
           		<td>
           			<ol>
           				{% if call.latest_entry %}
 							<li><A href="{% url 'admin:edc_call_manager_logentry_change' call.latest_entry.0 %}?&next=section_url&section_name=call_manager" ><div nowrap>{{call.latest_entry.1}}</div></A></li>
           				{% endif %}
+          				{% if call.next_call_log %}	
           					<li><A href="{% url 'admin:edc_call_manager_logentry_add' %}?call_log={{call.next_call_log.0}}&next=section_url&section_name=call_manager" ><div nowrap>Add New</div></A></li>
+          				{% else %}
+          				    ----
+          				{% endif %}
           			</ol>	
           		</td>
           		<td><A href="#">Map Image</A></td>
