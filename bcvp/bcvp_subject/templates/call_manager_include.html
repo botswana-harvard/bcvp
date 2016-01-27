@@ -44,7 +44,7 @@
           				{% endif %}
           			</ol>	
           		</td>
-          		<td><A href="#">Map Image</A></td>
+          		<td><A href="{% url 'map_image_url' call.recent_infection.pk %}">Map Image</A></td>
           		<td>{{call.recent_infection.gps_target_lat}}, {{call.recent_infection.gps_target_lon}}</td>
           		{% if call.eligibility %}
           			<td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' call.eligibility.pk %}?&next=section_url&section_name=call_manager">edit eligibility</A></td>

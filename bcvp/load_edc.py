@@ -9,6 +9,7 @@ from edc_dashboard.section import site_sections
 from edc_data_manager.data_manager import data_manager
 from edc_lab.lab_profile.classes import site_lab_profiles
 from edc_rule_groups.classes import site_rule_groups
+from edc_map.classes import site_mappers
 from edc_visit_schedule.classes import site_visit_schedules
 
 
@@ -21,6 +22,7 @@ def load_edc():
     AppConfiguration(lab_profiles=site_lab_profiles).prepare()
     site_visit_schedules.autodiscover()
     site_visit_schedules.build_all()
+    site_mappers.autodiscover()
     site_rule_groups.autodiscover()
     data_manager.prepare()
     site_sections.autodiscover()

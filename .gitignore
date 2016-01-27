@@ -70,3 +70,5 @@ target/
 *.pem
 *.key
 *keys
+
+bcvp/media

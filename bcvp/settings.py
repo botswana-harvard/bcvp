@@ -232,6 +232,7 @@ else:
         'Got hostname=\'{}\''.format(socket.gethostname()))
 
 SITE_CODE = '10'
+CURRENT_COMMUNITY = 'mochudi'
 SERVER_DEVICE_ID_LIST = [91, 92, 93, 94, 95, 96, 97, 99]
 CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$'
 TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'

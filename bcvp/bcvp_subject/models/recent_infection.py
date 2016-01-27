@@ -146,12 +146,6 @@ class RecentInfection(MapperMixin, BaseUuidModel):
         return (self.subject_identifier, ) + self.registered_subject.natural_key()
 
     @property
-    def img_url(self):
-        """Return the url to an image."""
-        mapper = site_mappers.get_mapper(self.area_name)
-        return mapper.image_file_url(self.pk)
-
-    @property
     def report_datetime(self):
         return self.drawn_datetime
 
