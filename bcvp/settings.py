@@ -104,6 +104,7 @@ INSTALLED_APPS = [
     'edc_visit_schedule',
     'edc_visit_tracking',
     'lis.labeling',
+    'edc_map',
 ]
 
 if 'test' in sys.argv:
@@ -178,6 +179,8 @@ TIME_ZONE = 'Africa/Gaborone'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = False
+
+MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR.child('static')

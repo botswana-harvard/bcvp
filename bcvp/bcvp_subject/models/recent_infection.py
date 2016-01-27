@@ -7,13 +7,18 @@ from django.core.validators import RegexValidator
 
 from edc_base.audit_trail import AuditTrail
 from edc_base.bw.validators import BWCellNumber
-from edc_base.encrypted_fields import EncryptedCharField, EncryptedDecimalField, IdentityField, FirstnameField
+from edc_base.encrypted_fields import EncryptedCharField, IdentityField, FirstnameField
 from edc_base.model.models import BaseUuidModel
 from edc_registration.models import RegisteredSubject
 from edc_map.classes import Mapper
+from edc_map.classes import site_mappers
+from edc_map.models import MapperMixin
 
 
-class RecentInfection(BaseUuidModel):
+from ..managers import RecentInfectionManager
+
+
+class RecentInfection(MapperMixin, BaseUuidModel):
 
     """A model pre-populated with a list of potential participants."""
 
@@ -64,20 +69,6 @@ class RecentInfection(BaseUuidModel):
         blank=True,
         null=True)
 
-    gps_lon = EncryptedDecimalField(
-        verbose_name='longitude',
-        max_digits=10,
-        blank=True,
-        null=True,
-        decimal_places=6)
-
-    gps_lat = EncryptedDecimalField(
-        verbose_name='latitude',
-        max_digits=10,
-        blank=True,
-        null=True,
-        decimal_places=6)
-
     subject_cell = EncryptedCharField(
         max_length=8,
         verbose_name="Cell number",
@@ -92,7 +83,7 @@ class RecentInfection(BaseUuidModel):
         blank=True,
         null=True)
 
-    objects = models.Manager()
+    objects = RecentInfectionManager()
 
     history = AuditTrail()
 
@@ -134,8 +125,8 @@ class RecentInfection(BaseUuidModel):
                                                        household_json['objects'][0]['gps_point_11'],
                                                        household_json['objects'][0]['gps_point_2'],
                                                        household_json['objects'][0]['gps_point_21'])
-                    self.gps_lat = lat
-                    self.gps_lon = lon
+                    self.gps_target_lat = lat
+                    self.gps_target_lon = lon
         super(RecentInfection, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -152,6 +143,16 @@ class RecentInfection(BaseUuidModel):
     @property
     def born(self):
         return self.dob.strftime('%Y-%m-%d')
+
+    def natural_key(self):
+        """Returns a natural key."""
+        return (self.subject_identifier, ) + self.registered_subject.natural_key()
+
+    @property
+    def img_url(self):
+        """Return the url to an image."""
+        mapper = site_mappers.get_mapper(self.area_name)
+        return mapper.image_file_url(self.pk)
 
     @property
     def report_datetime(self):

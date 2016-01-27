@@ -47,6 +47,11 @@ urlpatterns += patterns(
 
 urlpatterns += patterns(
     '',
+    (r'^edc_map/', include('edc_map.urls')),
+)
+
+urlpatterns += patterns(
+    '',
     url(r'^{app_name}/login/'.format(app_name=APP_NAME),
         'django.contrib.auth.views.login',
         name='{app_name}_login'.format(app_name=APP_NAME)),
