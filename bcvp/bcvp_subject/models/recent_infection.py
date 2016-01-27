@@ -15,9 +15,6 @@ from edc_map.classes import site_mappers
 from edc_map.models import MapperMixin
 
 
-from ..managers import RecentInfectionManager
-
-
 class RecentInfection(MapperMixin, BaseUuidModel):
 
     """A model pre-populated with a list of potential participants."""
@@ -83,7 +80,7 @@ class RecentInfection(MapperMixin, BaseUuidModel):
         blank=True,
         null=True)
 
-    objects = RecentInfectionManager()
+    objects = models.Manager()
 
     history = AuditTrail()
 
