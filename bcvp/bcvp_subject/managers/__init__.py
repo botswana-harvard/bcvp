@@ -1,2 +1,1 @@
 from .locator_manager import LocatorManager
-from .recent_infection_manager import RecentInfectionManager
