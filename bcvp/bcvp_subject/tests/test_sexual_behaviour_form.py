@@ -129,14 +129,14 @@ class TestSexualBehaviourForm(BaseTestCase):
             'If participant has had sex with somebody living outside of the community in the past year, '
             'CANNOT have 0 last year partners.', errors)
 
-    def test_past_year_sex_partner_outside_community_2(self):
-        self.data['more_sex'] = NO
-        self.data['last_year_partners'] = 5
-        form = SexualBehaviourForm(data=self.data)
-        errors = ''.join(form.errors.get('__all__'))
-        self.assertIn(
-            'Participant is indicated to have had sex in the past year with someone outside of the community.'
-            'Please provide the number of sex partners in the past year.', errors)
+#     def test_past_year_sex_partner_outside_community_2(self):
+#         self.data['more_sex'] = NO
+#         self.data['last_year_partners'] = 5
+#         form = SexualBehaviourForm(data=self.data)
+#         errors = ''.join(form.errors.get('__all__'))
+#         self.assertIn(
+#             'Participant is indicated to have had sex in the past year with someone outside of the community.'
+#             'Please provide the number of sex partners in the past year.', errors)
 
     def test_past_year_sex_partners(self):
         self.data['last_year_partners'] = 5

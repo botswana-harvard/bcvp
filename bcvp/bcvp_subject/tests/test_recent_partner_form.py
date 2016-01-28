@@ -2,7 +2,7 @@ from django.utils import timezone
 
 from edc_appointment.models.appointment import Appointment
 from edc_base.utils import edc_base_startup
-from edc_constants.constants import YES, FEMALE, UNKNOWN, NO, POS
+from edc_constants.constants import YES, FEMALE, UNKNOWN
 from edc_rule_groups.classes.controller import site_rule_groups
 
 from bcvp.bcvp.app_configuration import AppConfiguration
@@ -98,20 +98,3 @@ class TestRecentPartnerForm(BaseTestCase):
         self.assertIn(
             'Please do not provide the period that has past since the first sex with this person as it is '
             'indicated to be 0.', errors)
-# 
-#     def test_partner_status_1(self):
-#         """Assert if partner status is not positive then on arv should be None."""
-#         self.data['partner_status'] = POS
-#         form = RecentPartnerForm(data=self.data)
-#         errors = ''.join(form.errors.get('__all__'))
-#         self.assertIn(
-#             'You indicated partner is Positive, question on whether he/she is taking antiretrovirals '
-#             'should be None', errors)
-# 
-#     def test_partner_status_2(self):
-#         """Assert if partner status is positive then on arv should be answered."""
-#         self.data['partner_arv'] = YES
-#         form = RecentPartnerForm(data=self.data)
-#         errors = ''.join(form.errors.get('__all__'))
-#         self.assertIn(
-#             'You indicated partner is Positive. Please indicate whether they are on ARV.', errors)

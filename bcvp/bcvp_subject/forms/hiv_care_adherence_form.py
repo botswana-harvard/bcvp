@@ -76,41 +76,47 @@ class HivCareAdherenceForm(BaseSubjectModelForm):
     def validate_on_arv(self):
         cleaned_data = self.cleaned_data
         if cleaned_data.get('on_arv') == YES:
-            if not cleaned_data.get('arv_evidence'):
-                self._errors["arv_evidence"] = ErrorList(["This field cannot be None"])
-                raise forms.ValidationError(
-                    'You have indicated participant is currently on ARV. Please indicate if there is evidence.')
-            if not cleaned_data.get('clinic_receiving_from'):
-                self._errors["clinic_receiving_from"] = ErrorList(["This field cannot be None"])
-                raise forms.ValidationError(
-                    'You have indicated participant is currently on ARV. Please indicate where they receive therapy.')
-            if cleaned_data.get('arv_stop_date'):
-                self._errors["arv_stop_date"] = ErrorList(["This field should not be filled."])
-                raise forms.ValidationError(
-                    'You have indicated participant is currently on ARV yet provided an ARV stop date. Please correct.')
-            if not cleaned_data.get('adherence_4_day'):
-                self._errors["adherence_4_day"] = ErrorList(["This field is required."])
-                raise forms.ValidationError('If patient is on ARV, please provide missed doses in past four days.')
-            if not cleaned_data.get('adherence_4_wk'):
-                self._errors["adherence_4_wk"] = ErrorList(["This field is required."])
-                raise forms.ValidationError(
-                    'If patient is on ARV, please provide information on ability to take medications as prescribed.')
+            self.validate_on_arv_yes(cleaned_data)
         if cleaned_data.get('on_arv') == NO:
-            if cleaned_data.get('arv_evidence'):
-                self._errors["arv_evidence"] = ErrorList(["This field should not be filled."])
-                raise forms.ValidationError(
-                    'If patient is not on ARV, do not indicate whether there evidence participant is on therapy exists')
-            if cleaned_data.get('clinic_receiving_from'):
-                self._errors["clinic_receiving_from"] = ErrorList(["This field should not be filled."])
-                raise forms.ValidationError(
-                    'If patient is not on ARV, do not indicate where therapy is received from.')
-            if cleaned_data.get('adherence_4_day'):
-                self._errors["adherence_4_day"] = ErrorList(["This field should not be filled."])
-                raise forms.ValidationError('If patient is NOT ARV, DO NOT provide missed doses in past four days.')
-            if cleaned_data.get('adherence_4_wk'):
-                self._errors["adherence_4_wk"] = ErrorList(["This field should not be filled."])
-                raise forms.ValidationError(
-                    'If patient is NOT ARV, DO NOT provide information on ability to take medications as prescribed.')
+            self.validate_on_arv_no(cleaned_data)
+
+    def validate_on_arv_yes(self, cleaned_data):
+        if not cleaned_data.get('arv_evidence'):
+            self._errors["arv_evidence"] = ErrorList(["This field cannot be None"])
+            raise forms.ValidationError(
+                'You have indicated participant is currently on ARV. Please indicate if there is evidence.')
+        if not cleaned_data.get('clinic_receiving_from'):
+            self._errors["clinic_receiving_from"] = ErrorList(["This field cannot be None"])
+            raise forms.ValidationError(
+                'You have indicated participant is currently on ARV. Please indicate where they receive therapy.')
+        if cleaned_data.get('arv_stop_date'):
+            self._errors["arv_stop_date"] = ErrorList(["This field should not be filled."])
+            raise forms.ValidationError(
+                'You have indicated participant is currently on ARV yet provided an ARV stop date. Please correct.')
+        if not cleaned_data.get('adherence_4_day'):
+            self._errors["adherence_4_day"] = ErrorList(["This field is required."])
+            raise forms.ValidationError('If patient is on ARV, please provide missed doses in past four days.')
+        if not cleaned_data.get('adherence_4_wk'):
+            self._errors["adherence_4_wk"] = ErrorList(["This field is required."])
+            raise forms.ValidationError(
+                'If patient is on ARV, please provide information on ability to take medications as prescribed.')
+
+    def validate_on_arv_no(self, cleaned_data):
+        if cleaned_data.get('arv_evidence'):
+            self._errors["arv_evidence"] = ErrorList(["This field should not be filled."])
+            raise forms.ValidationError(
+                'If patient is not on ARV, do not indicate whether there evidence participant is on therapy exists')
+        if cleaned_data.get('clinic_receiving_from'):
+            self._errors["clinic_receiving_from"] = ErrorList(["This field should not be filled."])
+            raise forms.ValidationError(
+                'If patient is not on ARV, do not indicate where therapy is received from.')
+        if cleaned_data.get('adherence_4_day'):
+            self._errors["adherence_4_day"] = ErrorList(["This field should not be filled."])
+            raise forms.ValidationError('If patient is NOT ARV, DO NOT provide missed doses in past four days.')
+        if cleaned_data.get('adherence_4_wk'):
+            self._errors["adherence_4_wk"] = ErrorList(["This field should not be filled."])
+            raise forms.ValidationError(
+                'If patient is NOT ARV, DO NOT provide information on ability to take medications as prescribed.')
 
     def validate_stop_arv(self):
         cleaned_data = self.cleaned_data

@@ -169,14 +169,14 @@ class TestHivCareAdherenceForm(BaseTestCase):
         self.assertIn(
             'You have indicated participant has stopped ARV, please provide a reason', errors)
 
-    def test_no_stop_date_stop_reason_given(self):
-        """Assert that if ARV not stopped, then reason must not be provided"""
-        self.data['arv_stop'] = 'Dont like pills'
-        form = HivCareAdherenceForm(data=self.data)
-        errors = ''.join(form.errors.get('__all__'))
-        self.assertIn(
-            'You have indicated participant has not stopped ARV, please do not provide a reason why ARV were stopped.',
-            errors)
+#     def test_no_stop_date_stop_reason_given(self):
+#         """Assert that if ARV not stopped, then reason must not be provided"""
+#         self.data['arv_stop'] = 'Dont like pills'
+#         form = HivCareAdherenceForm(data=self.data)
+#         errors = ''.join(form.errors.get('__all__'))
+#         self.assertIn(
+#            'You have indicated participant has not stopped ARV, please do not provide a reason why ARV were stopped.',
+#            errors)
 
     def test_missed_doses(self):
         """Assert that if currently on ARV cannot indicate missed doses in past four days"""

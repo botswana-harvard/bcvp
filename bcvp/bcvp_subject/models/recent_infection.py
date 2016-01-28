@@ -11,11 +11,19 @@ from edc_base.encrypted_fields import EncryptedCharField, IdentityField, Firstna
 from edc_base.model.models import BaseUuidModel
 from edc_registration.models import RegisteredSubject
 from edc_map.classes import Mapper
-from edc_map.classes import site_mappers
 from edc_map.models import MapperMixin
+from edc_sync.models import SyncModelMixin
+
+PARTICIPANT_CATEGORY = (('recent', 'recent'), ('seroconverter', 'sero-converter'))
 
 
-class RecentInfection(MapperMixin, BaseUuidModel):
+class RecentInfectionsManager(models.Manager):
+
+    def get_by_natural_key(self, subject_identifier_as_pk):
+        return self.get(registered_subject__subject_identifier_as_pk=subject_identifier_as_pk)
+
+
+class RecentInfection(MapperMixin, SyncModelMixin, BaseUuidModel):
 
     """A model pre-populated with a list of potential participants."""
 
@@ -51,7 +59,8 @@ class RecentInfection(MapperMixin, BaseUuidModel):
     specimen_identifier = models.CharField(
         verbose_name='Specimen Id',
         max_length=50,
-        unique=True)
+        blank=True,
+        null=True,)
 
     drawn_datetime = models.DateTimeField(
         verbose_name='Date / Time Specimen Drawn',
@@ -65,6 +74,15 @@ class RecentInfection(MapperMixin, BaseUuidModel):
         max_length=50,
         blank=True,
         null=True)
+
+    classification = models.CharField(
+        verbose_name='classification',
+        max_length=50,
+        choices=PARTICIPANT_CATEGORY,
+        blank=True,
+        null=True,
+        help_text=(
+            'options are "recent" or "sero-converter"'))
 
     subject_cell = EncryptedCharField(
         max_length=8,
@@ -80,7 +98,7 @@ class RecentInfection(MapperMixin, BaseUuidModel):
         blank=True,
         null=True)
 
-    objects = models.Manager()
+    objects = RecentInfectionsManager()
 
     history = AuditTrail()
 
@@ -89,7 +107,8 @@ class RecentInfection(MapperMixin, BaseUuidModel):
         if not self.id:
             try:
                 RegisteredSubject.objects.get(subject_identifier=self.subject_identifier)
-                raise ValidationError('Recent infection record for "{}" already exists.'.format(self.subject_identifier))
+                raise ValidationError('Recent infection record for "{}" already exists.'.format(
+                    self.subject_identifier))
             except RegisteredSubject.DoesNotExist:
                 # By leaving dob, initials and identity blank, then you are directing the application to pull from the
                 # mpp system by REST, otherwise the application will use the provided data.
@@ -105,29 +124,35 @@ class RecentInfection(MapperMixin, BaseUuidModel):
                     self.dob = datetime.strptime(consent_json['objects'][0]['dob'], '%Y-%m-%d').date()
                     self.identity = consent_json['objects'][0]['identity']
                     self.initials = consent_json['objects'][0]['initials']
-                    self.specimen_identifier = consent_json['objects'][0]['subject_identifier']
                     url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format(
                         'api_lc',
                         'locator',
                         self.subject_identifier)
                     locator_json = self.pull_rest_json(url)
-                    self.subject_cell = locator_json['objects'][0]['subject_prefered_cell']
-                    self.subject_cell_alt = locator_json['objects'][0]['kin_cell']
+                    if locator_json['objects']:
+                        self.subject_cell = locator_json['objects'][0]['subject_prefered_cell']
+                        self.subject_cell_alt = locator_json['objects'][0]['kin_cell']
                     url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format(
                         'api_hd',
                         'household',
                         self.subject_identifier)
                     household_json = self.pull_rest_json(url)
-                    lat, lon = self.covert_coordinates(household_json['objects'][0]['gps_point_1'],
-                                                       household_json['objects'][0]['gps_point_11'],
-                                                       household_json['objects'][0]['gps_point_2'],
-                                                       household_json['objects'][0]['gps_point_21'])
-                    self.gps_target_lat = lat
-                    self.gps_target_lon = lon
+                    if household_json['objects'][0]:
+                        lat, lon, community = self.covert_coordinates(household_json['objects'][0]['gps_point_1'],
+                                                                      household_json['objects'][0]['gps_point_11'],
+                                                                      household_json['objects'][0]['gps_point_2'],
+                                                                      household_json['objects'][0]['gps_point_21'])
+                        self.gps_target_lat = lat
+                        self.gps_target_lon = lon
+                        self.area_name = community
         super(RecentInfection, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return self.subject_identifier
+        return 'Recent Infection, ({})'.format(self.subject_identifier)
+
+    def natural_key(self):
+        return self.registered_subject.natural_key()
+    natural_key.dependencies = ['edc_registration.registeredsubject', ]
 
     @property
     def cell(self):
@@ -140,10 +165,6 @@ class RecentInfection(MapperMixin, BaseUuidModel):
     @property
     def born(self):
         return self.dob.strftime('%Y-%m-%d')
-
-    def natural_key(self):
-        """Returns a natural key."""
-        return (self.subject_identifier, ) + self.registered_subject.natural_key()
 
     @property
     def report_datetime(self):
@@ -174,7 +195,7 @@ class RecentInfection(MapperMixin, BaseUuidModel):
         mapper = Mapper()
         lat = mapper.gps_lat(south_deg, soth_mnts)
         lon = mapper.gps_lon(east_deg, east_mnts)
-        return (lat, lon)
+        return (lat, lon, 'mochudi')
 
     class Meta:
         app_label = 'bcvp_subject'

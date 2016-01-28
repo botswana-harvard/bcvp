@@ -8,7 +8,10 @@ from .base_subject_model_admin import BaseSubjectModelAdmin
 class RecentInfectionAdmin(BaseSubjectModelAdmin):
 
     fields = (
-        'subject_identifier',)
+        'subject_identifier',
+        'specimen_identifier',
+        'result',
+        'classification')
 
     list_display = (
         'subject_identifier',
@@ -19,6 +22,10 @@ class RecentInfectionAdmin(BaseSubjectModelAdmin):
         'specimen_identifier',
         'subject_cell',
         'subject_cell_alt')
+
+    radio_fields = {
+        "classification": admin.VERTICAL,
+    }
 
     search_fields = (
         'subject_identifier', 'identity', 'initials',

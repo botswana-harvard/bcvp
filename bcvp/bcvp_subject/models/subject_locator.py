@@ -9,10 +9,14 @@ from edc_offstudy.models import OffStudyMixin
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
 
-from ..managers import LocatorManager
-
 from .subject_off_study import SubjectOffStudy
 from .subject_visit import SubjectVisit
+
+
+class LocatorManager(models.Manager):
+
+    def get_by_natural_key(self, subject_identifier_as_pk):
+        return self.get(registered_subject__subject_identifier_as_pk=subject_identifier_as_pk)
 
 
 class SubjectLocator(LocatorMixin, SyncModelMixin, OffStudyMixin, BaseUuidModel):
