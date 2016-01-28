@@ -11,7 +11,6 @@ from edc_base.encrypted_fields import EncryptedCharField, IdentityField, Firstna
 from edc_base.model.models import BaseUuidModel
 from edc_registration.models import RegisteredSubject
 from edc_map.classes import Mapper
-from edc_map.classes import site_mappers
 from edc_map.models import MapperMixin
 
 
