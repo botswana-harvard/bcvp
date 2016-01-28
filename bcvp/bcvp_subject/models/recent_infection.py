@@ -117,10 +117,10 @@ class RecentInfection(MapperMixin, BaseUuidModel):
                         'household',
                         self.subject_identifier)
                     household_json = self.pull_rest_json(url)
-                    lat, lon = self.covert_coordinates(household_json['objects'][0]['gps_point_1'],
-                                                       household_json['objects'][0]['gps_point_11'],
-                                                       household_json['objects'][0]['gps_point_2'],
-                                                       household_json['objects'][0]['gps_point_21'])
+                    lat, lon = self.covert_coordinates(household_json['objects'][0]['gps_point_2'],
+                                                       household_json['objects'][0]['gps_point_21'],
+                                                       household_json['objects'][0]['gps_point_1'],
+                                                       household_json['objects'][0]['gps_point_11'],)
                     self.gps_target_lat = lat
                     self.gps_target_lon = lon
         super(RecentInfection, self).save(*args, **kwargs)
