@@ -44,6 +44,7 @@ install:
 
 before_script:
   - flake8 bcvp
+  - mkdir bcvp/media
   - mysql -e 'create database bcvp CHARACTER SET utf8;'
   - mysql -e 'create database bcvp_lab CHARACTER SET utf8;'
 
