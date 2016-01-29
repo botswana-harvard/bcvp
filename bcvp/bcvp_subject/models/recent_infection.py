@@ -113,11 +113,10 @@ class RecentInfection(MapperMixin, SyncModelMixin, BaseUuidModel):
                 # By leaving dob, initials and identity blank, then you are directing the application to pull from the
                 # mpp system by REST, otherwise the application will use the provided data.
                 if not self.dob and not self.initials and not self.identity:
-                    url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format(
-                        'api_cn',
-                        'subjectconsent',
-                        self.subject_identifier)
-                    consent_json = self.pull_rest_json(url)
+                    consent_json = self.search_consent_version()
+                    if not consent_json:
+                        raise ValidationError('Could not locate a consent for "{}" in MPP'.format(
+                            self.subject_identifier))
                     self.drawn_datetime = datetime.now()
                     self.subject_identifier = consent_json['objects'][0]['subject_identifier']
                     self.first_name = consent_json['objects'][0]['first_name']
@@ -190,6 +189,34 @@ class RecentInfection(MapperMixin, SyncModelMixin, BaseUuidModel):
         except urllib2.HTTPError:
             raise
         return json_response
+
+    def search_consent_version(self):
+        try:
+            url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format(
+                'api_cn0',
+                'subjectconsent',
+                self.subject_identifier)
+            consent_json = self.pull_rest_json(url)
+            consent_json['objects'][0]['subject_identifier']
+            return consent_json
+        except IndexError:
+            try:
+                url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format(
+                    'api_cn1',
+                    'subjectconsent',
+                    self.subject_identifier)
+                consent_json = self.pull_rest_json(url)
+                consent_json['objects'][0]['subject_identifier']
+                return consent_json
+            except IndexError:
+                url = 'http://localhost:8012/bhp_sync/{}/{}/?format=json&limit=5&subject_identifier={}'.format(
+                    'api_cn2',
+                    'subjectconsent',
+                    self.subject_identifier)
+                consent_json = self.pull_rest_json(url)
+                consent_json['objects'][0]['subject_identifier']
+                return consent_json
+        return None
 
     def covert_coordinates(self, south_deg, soth_mnts, east_deg, east_mnts):
         mapper = Mapper()
