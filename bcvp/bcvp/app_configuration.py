@@ -89,10 +89,10 @@ class AppConfiguration(BaseAppConfiguration):
                  'aliquot_type': [AliquotTypeTuple('Whole Blood', 'WB', '02'),
                                   AliquotTypeTuple('Plasma', 'PL', '32'),
                                   AliquotTypeTuple('Buffy Coat', 'BC', '16'),
-                                  AliquotTypeTuple('PBMC Cell', 'PC', '31')],
+                                  AliquotTypeTuple('PBMC Cell', 'PBMC', '31')],
                  'profile': [ProfileTuple('Research Blood Draw', 'WB')],
                  'profile_item': [ProfileItemTuple('Research Blood Draw', 'PL', 1.2, 16),
-                                  ProfileItemTuple('Research Blood Draw', 'PC', 1.2, 8)]}}
+                                  ProfileItemTuple('Research Blood Draw', 'PBMC', 1.2, 8)]}}
 
     labeling_setup = {
         'label_printer': [LabelPrinterTuple('Zebra_Technologies_ZTC_GK420t',
