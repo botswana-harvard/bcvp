@@ -79,8 +79,8 @@ class AppConfiguration(BaseAppConfiguration):
         'panel': [PanelTuple('Research Blood Draw', 'TEST', 'WB')],
         'aliquot_type': [AliquotTypeTuple('Whole Blood', 'WB', '02'),
                          AliquotTypeTuple('Plasma', 'PL', '32'),
-                         AliquotTypeTuple('Serum', 'SERUM', '06'),
-                         AliquotTypeTuple('Buffy Coat', 'BC', '16')]}
+                         AliquotTypeTuple('Buffy Coat', 'BC', '16'),
+                         AliquotTypeTuple('PBMC Cell', 'PC', '31')]}
 
     lab_setup = {'bcvp': {
                  'destination': [DestinationTuple('BHHRL', 'Botswana-Harvard HIV Reference Laboratory',
@@ -88,11 +88,11 @@ class AppConfiguration(BaseAppConfiguration):
                  'panel': [PanelTuple('Research Blood Draw', 'TEST', 'WB')],
                  'aliquot_type': [AliquotTypeTuple('Whole Blood', 'WB', '02'),
                                   AliquotTypeTuple('Plasma', 'PL', '32'),
-                                  AliquotTypeTuple('Serum', 'SERUM', '06'),
-                                  AliquotTypeTuple('Buffy Coat', 'BC', '16')],
+                                  AliquotTypeTuple('Buffy Coat', 'BC', '16'),
+                                  AliquotTypeTuple('PBMC Cell', 'PC', '31')],
                  'profile': [ProfileTuple('Research Blood Draw', 'WB')],
-                 'profile_item': [ProfileItemTuple('Research Blood Draw', 'PL', 1.0, 3),
-                                  ProfileItemTuple('Research Blood Draw', 'BC', 0.5, 1)]}}
+                 'profile_item': [ProfileItemTuple('Research Blood Draw', 'PL', 1.2, 16),
+                                  ProfileItemTuple('Research Blood Draw', 'PC', 1.2, 8)]}}
 
     labeling_setup = {
         'label_printer': [LabelPrinterTuple('Zebra_Technologies_ZTC_GK420t',
