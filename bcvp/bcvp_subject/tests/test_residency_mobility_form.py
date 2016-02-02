@@ -1,29 +1,21 @@
 from django.utils import timezone
 
 from edc_appointment.models.appointment import Appointment
-from edc_base.utils import edc_base_startup
 from edc_constants.constants import YES, NOT_APPLICABLE
-from edc_rule_groups.classes.controller import site_rule_groups
 from edc_constants.constants import NO
 
-from bcvp.bcvp.app_configuration import AppConfiguration
 
 from .base_test_case import BaseTestCase
 from .factories import SubjectEligibilityFactory, SubjectVisitFactory
 
 from ..models import RecentInfection, SubjectConsent
 from ..forms import ResidencyMobilityForm
-from ..visit_schedule.subject import SubjectVisitSchedule
 
 
 class TestResidencyMobilityForm(BaseTestCase):
 
     def setUp(self):
         super(TestResidencyMobilityForm, self).setUp()
-        edc_base_startup()
-        AppConfiguration().prepare()
-        SubjectVisitSchedule().build()
-        site_rule_groups.autodiscover()
         recent_infection = RecentInfection.objects.first()
         eligibility = SubjectEligibilityFactory(
             registered_subject=recent_infection.registered_subject,

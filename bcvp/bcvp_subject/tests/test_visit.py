@@ -1,11 +1,9 @@
 from django.utils import timezone
 
 from edc_appointment.models.appointment import Appointment
-from edc_base.utils import edc_base_startup
 from edc_constants.constants import YES
-from edc_rule_groups.classes.controller import site_rule_groups
 
-from bcvp.bcvp.app_configuration import AppConfiguration
+
 from bcvp.bcvp_subject.models import RecentInfection
 from bcvp.bcvp_subject.models.subject_consent import SubjectConsent
 from bcvp.bcvp_subject.tests.factories import SubjectVisitFactory
@@ -14,17 +12,12 @@ from .base_test_case import BaseTestCase
 from .factories import SubjectEligibilityFactory
 
 from ..models import SubjectVisit
-from ..visit_schedule.subject import SubjectVisitSchedule
 
 
 class TestVisit(BaseTestCase):
 
     def setUp(self):
         super(TestVisit, self).setUp()
-        edc_base_startup()
-        AppConfiguration().prepare()
-        SubjectVisitSchedule().build()
-        site_rule_groups.autodiscover()
         recent_infection = RecentInfection.objects.first()
         eligibility = SubjectEligibilityFactory(
             registered_subject=recent_infection.registered_subject,

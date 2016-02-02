@@ -1,8 +1,7 @@
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
-from edc_constants.constants import YES, NO, ALIVE, MALE, FEMALE, DEAD
-from edc_registration.models.registered_subject import RegisteredSubject
+from edc_constants.constants import YES, ALIVE, MALE, FEMALE, DEAD
 
 from bcvp.bcvp_subject.models import RecentInfection
 
