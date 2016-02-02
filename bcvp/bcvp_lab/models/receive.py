@@ -35,7 +35,7 @@ class Receive(BaseReceive, SyncModelMixin, BaseUuidModel):
         return retval
 
     def requisition(self):
-        url = reverse('admin:bcvp_bcvplab_subjectrequisition_changelist')
+        url = reverse('admin:bcvp_lab_subjectrequisition_changelist')
         return '<a href="{0}?q={1}">{1}</a>'.format(url, self.requisition_identifier)
     requisition.allow_tags = True
 
