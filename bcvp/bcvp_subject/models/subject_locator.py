@@ -45,7 +45,7 @@ class SubjectLocator(LocatorMixin, SyncModelMixin, OffStudyMixin, BaseUuidModel)
     successful_mode_of_contact = models.CharField(
         verbose_name='RA: Which mode of contact led to a confirmed appointment with participant?',
         choices=CONTACT_MODE_CHOICE,
-        max_length=10,
+        max_length=25,
         null=True,
         blank=True)
 
