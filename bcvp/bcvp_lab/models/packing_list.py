@@ -17,14 +17,13 @@ class PackingList(PackingListMixin, SyncModelMixin, BaseUuidModel):
     @property
     def item_models(self):
         item_m = []
-        item_m.append(models.get_model('mb_lab', 'InfantRequisition'))
-        item_m.append(models.get_model('mb_lab', 'MaternalRequisition'))
-        item_m.append(models.get_model('mb_lab', 'Aliquot'))
+        item_m.append(models.get_model('bcvp_lab', 'SubjectRequisition'))
+        item_m.append(models.get_model('bcvp_lab', 'Aliquot'))
         return item_m
 
     @property
     def packing_list_item_model(self):
-        return models.get_model('mb_lab', 'PackingListItem')
+        return models.get_model('bcvp_lab', 'PackingListItem')
 
     class Meta:
         app_label = "bcvp_lab"
