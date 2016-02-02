@@ -2,7 +2,7 @@ from django.utils import timezone
 
 from edc_appointment.models.appointment import Appointment
 from edc_base.utils import edc_base_startup
-from edc_constants.constants import YES, FEMALE, UNKNOWN
+from edc_constants.constants import YES, FEMALE, UNKNOWN, POS
 from edc_rule_groups.classes.controller import site_rule_groups
 
 from bcvp.bcvp.app_configuration import AppConfiguration
@@ -19,10 +19,10 @@ class TestRecentPartnerForm(BaseTestCase):
 
     def setUp(self):
         super(TestRecentPartnerForm, self).setUp()
-        edc_base_startup()
-        AppConfiguration().prepare()
-        SubjectVisitSchedule().build()
-        site_rule_groups.autodiscover()
+#         edc_base_startup()
+#         AppConfiguration().prepare()
+#         SubjectVisitSchedule().build()
+#         site_rule_groups.autodiscover()
         recent_infection = RecentInfection.objects.first()
         eligibility = SubjectEligibilityFactory(
             registered_subject=recent_infection.registered_subject,
@@ -98,3 +98,19 @@ class TestRecentPartnerForm(BaseTestCase):
         self.assertIn(
             'Please do not provide the period that has past since the first sex with this person as it is '
             'indicated to be 0.', errors)
+
+    def test_partner_status_1(self):
+        """Assert that if partner status is positive then should fill data on ARV"""
+        self.data['partner_status'] = POS
+        form = RecentPartnerForm(data=self.data)
+        errors = ''.join(form.errors.get('__all__'))
+        self.assertIn(
+            'You indicated partner status is Positive. Please indicate whether they are on ARV.', errors)
+
+    def test_partner_status_2(self):
+        """Assert that if partner status is not positive then should not fill question on ARV"""
+        self.data['partner_arv'] = YES
+        form = RecentPartnerForm(data=self.data)
+        errors = ''.join(form.errors.get('__all__'))
+        self.assertIn(
+            'question on whether he/she is taking antiretrovirals should be None', errors)
