@@ -11,7 +11,7 @@ from edc_base.encrypted_fields import EncryptedCharField, IdentityField, Firstna
 from edc_base.model.models import BaseUuidModel
 from edc_base.model.validators import datetime_not_before_study_start, datetime_not_future
 from edc_constants.choices import YES_NO, ALIVE_DEAD, DEAD, GENDER
-from edc_constants.constants import NO, YES
+from edc_constants.constants import NO
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
 
@@ -53,7 +53,8 @@ class SubjectEligibility (SyncModelMixin, BaseUuidModel):
 
     last_name = LastnameField(
         verbose_name="Last name",
-        null=True)
+        null=True,
+        blank=True)
 
     initials = EncryptedCharField(
         validators=[RegexValidator(
