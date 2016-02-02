@@ -30,6 +30,10 @@ class TestCalls(BaseTestCase):
         call = calls[0]
         self.assertIsNone(call.eligibility)
 
+    def test_call_proxy_returns_locator(self):
+        calls = BcvpCall.objects.filter(subject_identifier=self.recent_infection.subject_identifier)
+        self.assertIsNotNone(calls[0].locator)
+
     def test_call_proxy_returns_eligibility(self):
         calls = BcvpCall.objects.filter(subject_identifier=self.recent_infection.subject_identifier)
         self.assertEqual(calls.count(), 1)

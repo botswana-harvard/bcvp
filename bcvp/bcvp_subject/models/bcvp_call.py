@@ -6,6 +6,7 @@ from edc_constants.constants import NO
 
 from .recent_infection import RecentInfection
 from .subject_eligibility import SubjectEligibility
+from .subject_locator import SubjectLocator
 
 
 class BcvpCall(Call):
@@ -22,6 +23,13 @@ class BcvpCall(Call):
         try:
             return RecentInfection.objects.get(subject_identifier=self.subject_identifier)
         except RecentInfection.DoesNotExist:
+            return None
+
+    @property
+    def locator(self):
+        try:
+            return SubjectLocator.objects.get(registered_subject__subject_identifier=self.subject_identifier)
+        except SubjectLocator.DoesNotExist:
             return None
 
     @property
