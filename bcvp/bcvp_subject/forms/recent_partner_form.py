@@ -44,12 +44,12 @@ class RecentPartnerForm(BaseSubjectModelForm):
         if cleaned_data.get('partner_status') != POS:
             if cleaned_data.get('partner_arv'):
                 raise forms.ValidationError(
-                    'You indicated partner is {}, question on whether he/she is taking antiretrovirals '
+                    'You indicated partner status is {}, question on whether he/she is taking antiretrovirals '
                     'should be None'.format(cleaned_data.get('partner_status')))
-        else:
+        elif cleaned_data.get('partner_status') == POS:
             if not cleaned_data.get('partner_arv'):
                 raise forms.ValidationError(
-                    'You indicated partner is Positive. Please indicate whether they are on ARV.')
+                    'You indicated partner status is Positive. Please indicate whether they are on ARV.')
 
     class Meta:
         model = RecentPartner
