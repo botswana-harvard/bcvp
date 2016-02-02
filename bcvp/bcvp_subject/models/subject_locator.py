@@ -8,9 +8,14 @@ from edc_locator.models import LocatorMixin
 from edc_offstudy.models import OffStudyMixin
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
+from edc_constants.constants import NOT_APPLICABLE
 
 from .subject_off_study import SubjectOffStudy
 from .subject_visit import SubjectVisit
+
+CONTACT_MODE_CHOICE = ((NOT_APPLICABLE, NOT_APPLICABLE),
+                       ('telephone', 'phone call'),
+                       ('household_visit', 'household visit'))
 
 
 class LocatorManager(models.Manager):
@@ -36,6 +41,13 @@ class SubjectLocator(LocatorMixin, SyncModelMixin, OffStudyMixin, BaseUuidModel)
             datetime_not_future],
         default=timezone.now(),
         help_text='Date and time of assessing eligibility')
+
+    successful_mode_of_contact = models.CharField(
+        verbose_name='RA: Which mode of contact led to a confirmed appointment with participant?',
+        choices=CONTACT_MODE_CHOICE,
+        max_length=10,
+        null=True,
+        blank=True)
 
     history = AuditTrail()
 

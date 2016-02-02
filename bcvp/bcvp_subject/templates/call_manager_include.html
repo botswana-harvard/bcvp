@@ -9,6 +9,7 @@
         <th>ContactNo</th>
         <th>Call Status</th>
         <th>Recent Call</th>
+        <th>Update Locator</th>
         <th>Map Image</th>
         <th>Coordinates</th>
         <th>Eligible</th>
@@ -22,7 +23,7 @@
       {% for call in search_result.object_list %}
           <tr class="{% cycle 'row2' 'row1' %}">
           		{% if call.eligibility and call.eligibility.is_consented %}
-                    <td><A href="{% url 'subject_dashboard_url' dashboard_type='subject' dashboard_model='subject_eligibility' dashboard_id=call.eligibility.pk show='appointments' %}"><div nowrap>{{ call.eligibility.registered_subject.subject_identifier }}</div></A></td>
+                    <td><A href="{% url 'subject_dashboard_url' dashboard_type='subject' dashboard_model='subject_eligibility' dashboard_id=call.eligibility.pk show='appointments' %}">{{ call.eligibility.registered_subject.subject_identifier }}</A></td>
           		{% elif call.eligibility and call.eligibility.is_eligible %}
                     <td><A href="{% url 'admin:bcvp_subject_subjectconsent_add' %}?registered_subject={{call.eligibility.registered_subject.pk}}&next=section_url&section_name=call_manager">({{call.recent_infection.subject_identifier}}) add subject consent</A></td>
                 {% elif call.eligibility and not call.eligibility.is_eligible %}
@@ -35,21 +36,22 @@
           		<td>
           			<ol>
           				{% if call.latest_entry %}
-							<li><A href="{% url 'admin:edc_call_manager_logentry_change' call.latest_entry.0 %}?&next=section_url&section_name=call_manager" ><div nowrap>{{call.latest_entry.1}}</div></A></li>
+							<li><A href="{% url 'admin:edc_call_manager_logentry_change' call.latest_entry.0 %}?next=section_url&section_name=call_manager" >{{call.latest_entry.1}}</A></li>
           				{% endif %}
           				{% if call.next_call_log %}	
-          					<li><A href="{% url 'admin:edc_call_manager_logentry_add' %}?call_log={{call.next_call_log.0}}&next=section_url&section_name=call_manager" ><div nowrap>Add New</div></A></li>
+          					<li><A href="{% url 'admin:edc_call_manager_logentry_add' %}?call_log={{call.next_call_log.0}}&next=section_url&section_name=call_manager" >Add New</A></li>
           				{% else %}
           				    ----
           				{% endif %}
           			</ol>	
           		</td>
+          		<td><A href="{% url 'admin:bcvp_subject_subjectlocator_change' call.locator.pk %}?registered_subject={{call.locator.registered_subject.pk}}&next=section_url&section_name=call_manager">locator</A></td>
           		<td><A href="{% url 'map_image_url' call.recent_infection.pk %}">Map Image</A></td>
           		<td>{{call.recent_infection.gps_target_lat}}, {{call.recent_infection.gps_target_lon}}</td>
           		{% if call.eligibility %}
-          			<td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' call.eligibility.pk %}?&next=section_url&section_name=call_manager">edit eligibility</A></td>
+          			<td><A href="{% url 'admin:bcvp_subject_subjecteligibility_change' call.eligibility.pk %}?next=section_url&section_name=call_manager">edit eligibility</A></td>
           		{% else %}
-          			<td><A href="{% url 'admin:bcvp_subject_subjecteligibility_add' %}?&next=section_url&section_name=call_manager">add eligibility</A></td>
+          			<td><A href="{% url 'admin:bcvp_subject_subjecteligibility_add' %}?next=section_url&section_name=call_manager">add eligibility</A></td>
           		{% endif %}
                 <td>
                 	{% if call.eligibility and not call.eligibility.is_eligible %}
@@ -60,9 +62,9 @@
                 </td>
           		{% if call.eligibility.is_refused %}
                     {% if not call.eligibility.subject_refusal.reason %}
-                    	<td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call.eligibility.subject_refusal.pk %}?&next=section_url&section_name=call_manager">add refusal</A></td>
+                    	<td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call.eligibility.subject_refusal.pk %}?next=section_url&section_name=call_manager">add refusal</A></td>
                     {% else %}
-                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call.eligibility.subject_refusal.pk %}?&next=section_url&section_name=call_manager">edit refusal</A></td>
+                        <td><A href="{% url 'admin:bcvp_subject_subjectrefusal_change' call.eligibility.subject_refusal.pk %}?next=section_url&section_name=call_manager">edit refusal</A></td>
                     {% endif %}
                 {% else %}
                     <td>-----</td>

@@ -31,7 +31,8 @@ class SubjectLocatorAdmin(BaseLocatorModelAdmin):
         'contact_rel',
         'contact_physical_address',
         'contact_cell',
-        'contact_phone')
+        'contact_phone',
+        'successful_mode_of_contact')
     list_display = ('may_follow_up', 'may_call_work')
 
     list_filter = ('may_follow_up', 'may_call_work')
@@ -43,7 +44,8 @@ class SubjectLocatorAdmin(BaseLocatorModelAdmin):
     radio_fields = {"home_visit_permission": admin.VERTICAL,
                     "may_follow_up": admin.VERTICAL,
                     "may_call_work": admin.VERTICAL,
-                    "may_contact_someone": admin.VERTICAL}
+                    "may_contact_someone": admin.VERTICAL,
+                    'successful_mode_of_contact': admin.VERTICAL}
 
     actions = []  # do not allow export to CSV
 
