@@ -74,6 +74,12 @@ class SexualBehaviour(SubjectCrfModel):
         blank=True,
         choices=ALCOHOL_SEX)
 
+    recent_partner = models.CharField(
+        verbose_name="Have you had a partner in the past 3 months?",
+        max_length=4,
+        choices=YES_NO_DWTA,
+    )
+
     history = AuditTrail()
 
     class Meta:

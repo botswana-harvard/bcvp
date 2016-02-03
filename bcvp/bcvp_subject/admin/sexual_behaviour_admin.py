@@ -18,12 +18,15 @@ class SexualBehaviourAdmin(BaseSubjectModelAdmin):
         'more_sex',
         'first_sex',
         'condom',
-        'alcohol_sex',)
+        'alcohol_sex',
+        'recent_partner',)
     radio_fields = {
         "ever_sex": admin.VERTICAL,
         "more_sex": admin.VERTICAL,
         "condom": admin.VERTICAL,
-        "alcohol_sex": admin.VERTICAL}
+        "alcohol_sex": admin.VERTICAL,
+        "recent_partner": admin.VERTICAL,
+    }
     instructions = [_("<h5>Read to Participant</h5> In this part of the interview,"
                       " I will be asking you some questions about your"
                       " sexual relationships that you might have had,"
