@@ -1,17 +1,13 @@
-from datetime import datetime
-
 from django.utils import timezone
 
-from edc_constants.constants import YES, NO, ALIVE, CLOSED, NEW
-from edc_constants.choices import TIME_OF_DAY, TIME_OF_WEEK
+from edc_constants.constants import YES, NO, ALIVE, NEW
 from edc_call_manager.models import Log, LogEntry
-from edc_call_manager.choices import CONTACT_TYPE
 
+from bcvp.bcvp_subject.forms.subject_locator_form import SubjectLocatorForm
 from bcvp.bcvp_subject.models import (RecentInfection, BcvpCall)
 
 from .base_test_case import BaseTestCase
 from .factories import SubjectEligibilityFactory
-from bcvp.bcvp_subject.forms.subject_locator_form import SubjectLocatorForm
 
 
 class TestSubjectLocatorForm(BaseTestCase):
@@ -19,7 +15,7 @@ class TestSubjectLocatorForm(BaseTestCase):
     def setUp(self):
         super(TestSubjectLocatorForm, self).setUp()
         recent_infection = RecentInfection.objects.first()
-        eligibility = SubjectEligibilityFactory(
+        SubjectEligibilityFactory(
             registered_subject=recent_infection.registered_subject,
             dob=recent_infection.dob,
             initials=recent_infection.initials,
