@@ -45,7 +45,7 @@ class BcvpCall(Call):
         try:
             Log.objects.get(call=self)
         except Log.DoesNotExist:
-            Log.objects.create(call=self)
+            Log.objects.create(call=Call(self))
         latest_entry = LogEntry.objects.filter(log__call=self).order_by('-call_datetime').first()
         if (not latest_entry) or (latest_entry and latest_entry.call_again != NO):
             return (Log.objects.filter(call=self).first().id, timezone.now().strftime('%Y-%m-%d %H:%M'))
