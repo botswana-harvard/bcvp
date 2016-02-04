@@ -7,47 +7,47 @@ django-dajax==0.9.1
 django-dajaxice==0.5.1
 django-databrowse==2014.9.26
 django-extensions==1.6.1
--e git+https://github.com/erikvw/django-revision.git#egg=django_revision-dev
+-e git+https://github.com/erikvw/django-revision.git@develop#egg=django_revision-dev
 django-tastypie==0.12.2
--e git+https://github.com/botswana-harvard/edc-admin-exclude.git#egg=edc_admin_exclude-dev
--e git+https://github.com/botswana-harvard/edc-appointment.git#egg=edc_appointment-dev
--e git+https://github.com/botswana-harvard/edc-audit.git#egg=edc_audit-dev
--e git+https://github.com/botswana-harvard/edc-base.git#egg=edc_base-dev
--e git+https://github.com/botswana-harvard/edc-call-manager.git#egg=edc_call_manager-dev
--e git+https://github.com/botswana-harvard/edc-code-lists.git#egg=edc_code_lists-dev
--e git+https://github.com/botswana-harvard/edc-configuration.git#egg=edc_configuration-dev
--e git+https://github.com/botswana-harvard/edc-consent.git#egg=edc_consent-dev
--e git+https://github.com/botswana-harvard/edc-constants.git#egg=edc_constants-dev
--e git+https://github.com/botswana-harvard/edc-content-type-map.git#egg=edc_content_type_map-dev
--e git+https://github.com/botswana-harvard/edc-crypto-fields.git#egg=edc_crypto_fields-dev
--e git+https://github.com/botswana-harvard/edc-dashboard.git#egg=edc_dashboard-dev
--e git+https://github.com/botswana-harvard/edc-data-dictionary.git#egg=edc_data_dictionary-dev
--e git+https://github.com/botswana-harvard/edc-data-manager.git#egg=edc_data_manager-dev
--e git+https://github.com/botswana-harvard/edc-death-report.git#egg=edc_death_report-dev
--e git+https://github.com/botswana-harvard/edc-device.git#egg=edc_device-dev
--e git+https://github.com/botswana-harvard/edc-export.git#egg=edc_export-dev
--e git+https://github.com/botswana-harvard/edc-identifier.git#egg=edc_identifier-dev
--e git+https://github.com/botswana-harvard/edc-lab.git#egg=edc_lab-dev
--e git+https://github.com/botswana-harvard/edc-locator.git#egg=edc_locator-dev
--e git+https://github.com/botswana-harvard/edc-map.git#egg=edc_map-dev
--e git+https://github.com/botswana-harvard/edc-meta-data.git#egg=edc_meta_data-dev
--e git+https://github.com/botswana-harvard/edc-notification.git#egg=edc_notification-dev
--e git+https://github.com/botswana-harvard/edc-offstudy.git#egg=edc_offstudy-dev
--e git+https://github.com/botswana-harvard/edc-quota.git#egg=edc_quota-dev
--e git+https://github.com/botswana-harvard/edc-registration.git#egg=edc_registration-dev
--e git+https://github.com/botswana-harvard/edc-rule-groups.git#egg=edc_rule_groups-dev
--e git+https://github.com/botswana-harvard/edc-sync.git#egg=edc_sync-dev
--e git+https://github.com/botswana-harvard/edc-templates.git#egg=edc_templates-dev
--e git+https://github.com/botswana-harvard/edc-testing.git#egg=edc_testing-dev
--e git+https://github.com/botswana-harvard/edc-visit-schedule.git#egg=edc_visit_schedule-dev
--e git+https://github.com/botswana-harvard/edc-visit-tracking.git#egg=edc_visit_tracking-dev
+-e git+https://github.com/botswana-harvard/edc-admin-exclude.git@develop#egg=edc_admin_exclude-dev
+-e git+https://github.com/botswana-harvard/edc-appointment.git@develop#egg=edc_appointment-dev
+-e git+https://github.com/botswana-harvard/edc-audit.git@develop#egg=edc_audit-dev
+-e git+https://github.com/botswana-harvard/edc-base.git@develop#egg=edc_base-dev
+-e git+https://github.com/botswana-harvard/edc-call-manager.git@develop#egg=edc_call_manager-dev
+-e git+https://github.com/botswana-harvard/edc-code-lists.git@develop#egg=edc_code_lists-dev
+-e git+https://github.com/botswana-harvard/edc-configuration.git@develop#egg=edc_configuration-dev
+-e git+https://github.com/botswana-harvard/edc-consent.git@develop#egg=edc_consent-dev
+-e git+https://github.com/botswana-harvard/edc-constants.git@develop#egg=edc_constants-dev
+-e git+https://github.com/botswana-harvard/edc-content-type-map.git@develop#egg=edc_content_type_map-dev
+-e git+https://github.com/botswana-harvard/edc-crypto-fields.git@develop#egg=edc_crypto_fields-dev
+-e git+https://github.com/botswana-harvard/edc-dashboard.git@develop#egg=edc_dashboard-dev
+-e git+https://github.com/botswana-harvard/edc-data-dictionary.git@develop#egg=edc_data_dictionary-dev
+-e git+https://github.com/botswana-harvard/edc-data-manager.git@develop#egg=edc_data_manager-dev
+-e git+https://github.com/botswana-harvard/edc-death-report.git@develop#egg=edc_death_report-dev
+-e git+https://github.com/botswana-harvard/edc-device.git@develop#egg=edc_device-dev
+-e git+https://github.com/botswana-harvard/edc-export.git@develop#egg=edc_export-dev
+-e git+https://github.com/botswana-harvard/edc-identifier.git@develop#egg=edc_identifier-dev
+-e git+https://github.com/botswana-harvard/edc-lab.git@develop#egg=edc_lab-dev
+-e git+https://github.com/botswana-harvard/edc-locator.git@develop#egg=edc_locator-dev
+-e git+https://github.com/botswana-harvard/edc-map.git@develop#egg=edc_map-dev
+-e git+https://github.com/botswana-harvard/edc-meta-data.git@develop#egg=edc_meta_data-dev
+-e git+https://github.com/botswana-harvard/edc-notification.git@develop#egg=edc_notification-dev
+-e git+https://github.com/botswana-harvard/edc-offstudy.git@develop#egg=edc_offstudy-dev
+-e git+https://github.com/botswana-harvard/edc-quota.gi@developt#egg=edc_quota-dev
+-e git+https://github.com/botswana-harvard/edc-registration.git@develop#egg=edc_registration-dev
+-e git+https://github.com/botswana-harvard/edc-rule-groups.git@develop#egg=edc_rule_groups-dev
+-e git+https://github.com/botswana-harvard/edc-sync.git@develop#egg=edc_sync-dev
+-e git+https://github.com/botswana-harvard/edc-templates.git@develop#egg=edc_templates-dev
+-e git+https://github.com/botswana-harvard/edc-testing.git@develop#egg=edc_testing-dev
+-e git+https://github.com/botswana-harvard/edc-visit-schedule.git@develop#egg=edc_visit_schedule-dev
+-e git+https://github.com/botswana-harvard/edc-visit-tracking.git@develop#egg=edc_visit_tracking-dev
 factory-boy==2.6.0
 fake-factory==0.5.3
 flake8==2.5.1
 geopy==1.11.0
 gitdb==0.6.4
--e git+https://github.com/botswana-harvard/lab-requisition.git#egg=lab_requisition-dev
--e git+https://github.com/botswana-harvard/lis.git#egg=lis-dev
+-e git+https://github.com/botswana-harvard/lab-requisition.git@develop#egg=lab_requisition-dev
+-e git+https://github.com/botswana-harvard/lis.git@develop#egg=lis-dev
 mccabe==0.3.1
 numpy==1.10.4
 pep8==1.7.0
