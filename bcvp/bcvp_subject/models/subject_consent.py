@@ -5,7 +5,7 @@ from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
 from edc_consent.models.base_consent import BaseConsent
 from edc_consent.models.fields import (
-    PersonalFieldsMixin, CitizenFieldsMixin, ReviewFieldsMixin, VulnerabilityFieldsMixin)
+    PersonalFieldsMixin, CitizenFieldsMixin, ReviewFieldsMixin, VulnerabilityFieldsMixin, SampleCollectionFieldsMixin)
 from edc_consent.models.fields.bw import IdentityFieldsMixin
 from edc_identifier.subject.classes import SubjectIdentifier
 from edc_offstudy.models import OffStudyMixin
@@ -16,7 +16,7 @@ from bcvp.bcvp.constants import MIN_AGE_OF_CONSENT, MAX_AGE_OF_CONSENT
 
 
 class SubjectConsent(BaseConsent, AppointmentMixin, SyncModelMixin, OffStudyMixin, ReviewFieldsMixin,
-                     IdentityFieldsMixin, PersonalFieldsMixin,
+                     SampleCollectionFieldsMixin, IdentityFieldsMixin, PersonalFieldsMixin,
                      CitizenFieldsMixin, VulnerabilityFieldsMixin, BaseUuidModel):
 
     """ A model completed by the user on the subject's consent. """

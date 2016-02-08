@@ -35,7 +35,9 @@ class SubjectConsentAdmin(BaseModelAdmin):
               'study_questions',
               'assessment_score',
               'consent_signature',
-              'consent_copy')
+              'consent_copy',
+              'may_store_samples',
+              )
     actions = [flag_as_verified_against_paper, unflag_as_verified_against_paper]
 
     radio_fields = {
@@ -49,7 +51,8 @@ class SubjectConsentAdmin(BaseModelAdmin):
         'is_dob_estimated': admin.VERTICAL,
         'is_literate': admin.VERTICAL,
         'language': admin.VERTICAL,
-        'study_questions': admin.VERTICAL}
+        'study_questions': admin.VERTICAL,
+        'may_store_samples': admin.VERTICAL}
 
     list_display = ('subject_identifier',
                     'registered_subject',
