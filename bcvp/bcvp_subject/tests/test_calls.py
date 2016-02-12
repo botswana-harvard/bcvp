@@ -41,11 +41,6 @@ class TestCalls(BaseTestCase):
         SubjectEligibilityFactory(**self.data)
         self.assertEqual(call.eligibility.registered_subject.subject_identifier, call.subject_identifier)
 
-    def test_next_call_log_available(self):
-        call = BcvpCall.objects.get(subject_identifier=self.recent_infection.subject_identifier)
-        self.assertEqual(LogEntry.objects.filter(log__call=self).count(), 0)
-        self.assertEqual(call.next_call_log[0], Log.objects.get(call=call).id)
-
     def test_next_call_unavailable(self):
         call = BcvpCall.objects.get(subject_identifier=self.recent_infection.subject_identifier)
         next_call_tuple = call.next_call_log
