@@ -7,12 +7,13 @@ from edc_meta_data.managers import CrfMetaDataManager
 from edc_offstudy.models import OffStudyMixin
 from edc_sync.models import SyncModelMixin
 from edc_visit_tracking.models import CrfModelMixin
+from edc_export.models import ExportTrackingFieldsMixin
 
 from .subject_consent import SubjectConsent
 from .subject_visit import SubjectVisit
 
 
-class SubjectCrfModel(CrfModelMixin, SyncModelMixin, OffStudyMixin,
+class SubjectCrfModel(CrfModelMixin, ExportTrackingFieldsMixin, SyncModelMixin, OffStudyMixin,
                       RequiresConsentMixin, BaseUuidModel):
 
     """ Base model for all scheduled models (adds key to :class:`SubjectVisit`). """

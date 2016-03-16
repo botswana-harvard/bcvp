@@ -11,12 +11,13 @@ from edc_identifier.subject.classes import SubjectIdentifier
 from edc_offstudy.models import OffStudyMixin
 from edc_registration.models import RegisteredSubject
 from edc_sync.models import SyncModelMixin
+from edc_export.models import ExportTrackingFieldsMixin
 
 from bcvp.bcvp.constants import MIN_AGE_OF_CONSENT, MAX_AGE_OF_CONSENT
 
 
 class SubjectConsent(BaseConsent, AppointmentMixin, SyncModelMixin, OffStudyMixin, ReviewFieldsMixin,
-                     SampleCollectionFieldsMixin, IdentityFieldsMixin, PersonalFieldsMixin,
+                     ExportTrackingFieldsMixin, SampleCollectionFieldsMixin, IdentityFieldsMixin, PersonalFieldsMixin,
                      CitizenFieldsMixin, VulnerabilityFieldsMixin, BaseUuidModel):
 
     """ A model completed by the user on the subject's consent. """

@@ -6,13 +6,14 @@ from edc_offstudy.models import OffStudyMixin
 from edc_sync.models import SyncModelMixin
 from edc_visit_tracking.constants import VISIT_REASON_NO_FOLLOW_UP_CHOICES
 from edc_visit_tracking.models import VisitModelMixin, PreviousVisitMixin, CaretakerFieldsMixin
+from edc_export.models import ExportTrackingFieldsMixin
 
 from bcvp.bcvp.choices import VISIT_REASON
 
 from .subject_consent import SubjectConsent
 
 
-class SubjectVisit(OffStudyMixin, SyncModelMixin, PreviousVisitMixin, CrfMetaDataMixin,
+class SubjectVisit(OffStudyMixin, ExportTrackingFieldsMixin, SyncModelMixin, PreviousVisitMixin, CrfMetaDataMixin,
                    RequiresConsentMixin, CaretakerFieldsMixin, VisitModelMixin, BaseUuidModel):
 
     """ Subject visit form."""

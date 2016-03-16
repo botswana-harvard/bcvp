@@ -4,6 +4,7 @@ from django.db import models
 from edc_base.audit_trail import AuditTrail
 from edc_base.model.models import BaseUuidModel
 from edc_sync.models import SyncModelMixin
+from edc_export.models import ExportTrackingFieldsMixin
 from lis.specimen.lab_aliquot.managers import AliquotManager
 from lis.specimen.lab_aliquot.models import BaseAliquot
 
@@ -12,7 +13,7 @@ from .aliquot_type import AliquotType
 from .receive import Receive
 
 
-class Aliquot(BaseAliquot, SyncModelMixin, BaseUuidModel):
+class Aliquot(BaseAliquot, ExportTrackingFieldsMixin, SyncModelMixin, BaseUuidModel):
 
     receive = models.ForeignKey(
         Receive,

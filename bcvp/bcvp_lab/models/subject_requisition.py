@@ -5,6 +5,7 @@ from edc_base.model.models.base_uuid_model import BaseUuidModel
 from lab_requisition.models import RequisitionModelMixin
 from edc_meta_data.managers import RequisitionMetaDataManager
 from edc_sync.models import SyncModelMixin
+from edc_export.models import ExportTrackingFieldsMixin
 from edc_visit_tracking.models.crf_model_mixin import CrfModelMixin, CrfModelManager
 
 from bcvp.bcvp_subject.models import SubjectVisit
@@ -21,7 +22,8 @@ class SubjectRequisitionManager(CrfModelManager):
         return self.get(requisition_identifier=requisition_identifier)
 
 
-class SubjectRequisition(CrfModelMixin, RequisitionModelMixin, SyncModelMixin, BaseUuidModel):
+class SubjectRequisition(CrfModelMixin, ExportTrackingFieldsMixin,
+                         RequisitionModelMixin, SyncModelMixin, BaseUuidModel):
 
     visit_model = SubjectVisit
 
