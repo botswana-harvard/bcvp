@@ -111,7 +111,7 @@ class RecentInfection(MapperMixin, SyncModelMixin, BaseUuidModel):
                     self.subject_identifier))
             except RegisteredSubject.DoesNotExist:
                 # By leaving dob, initials and identity blank, then you are directing the application to pull from the
-                # mpp system by REST, otherwise the application will use the provided data.
+                # mpp system by REST API, otherwise the application will use the provided data.
                 if not self.dob and not self.initials and not self.identity:
                     consent_json = self.search_consent_version()
                     if not consent_json:
