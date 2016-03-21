@@ -40,7 +40,9 @@ class RecentInfectionAdmin(BaseSubjectModelAdmin):
             description="Export to CSV file",
             fields=[],
             delimiter=',',
-            exclude=['user_created', 'user_modified', 'hostname_created', 'hostname_modified'],
+            exclude=['user_created', 'user_modified', 'hostname_created', 'hostname_modified', 'identity',
+                     'gps_target_lon', 'gps_target_lat', 'first_name', 'dob', 'initials', 'subject_cell', 
+                     'subject_cell_alt'],
             extra_fields=OrderedDict(
                 {'subject_identifier': 'subject_visit__appointment__registered_subject__subject_identifier',
                  'gender': 'subject_visit__appointment__registered_subject__gender',
