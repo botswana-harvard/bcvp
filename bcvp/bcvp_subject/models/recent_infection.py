@@ -13,6 +13,7 @@ from edc_registration.models import RegisteredSubject
 from edc_map.classes import Mapper
 from edc_map.models import MapperMixin
 from edc_sync.models import SyncModelMixin
+from edc_export.models import ExportTrackingFieldsMixin
 
 PARTICIPANT_CATEGORY = (('recent', 'recent'), ('seroconverter', 'sero-converter'))
 
@@ -23,7 +24,7 @@ class RecentInfectionsManager(models.Manager):
         return self.get(registered_subject__subject_identifier_as_pk=subject_identifier_as_pk)
 
 
-class RecentInfection(MapperMixin, SyncModelMixin, BaseUuidModel):
+class RecentInfection(MapperMixin, ExportTrackingFieldsMixin, SyncModelMixin, BaseUuidModel):
 
     """A model pre-populated with a list of potential participants."""
 
